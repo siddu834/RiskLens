@@ -267,3 +267,72 @@ footer {
     }
 
 }
+
+/* STEP 12.5 — FINAL RESPONSIVE IMPROVEMENTS */
+
+/* Prevent content from overflowing */
+img {
+    max-width: 100%;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Improve navigation on smaller screens */
+nav {
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Smooth card interaction */
+.card,
+.metric {
+    transition: transform 0.2s ease;
+}
+
+.card:hover,
+.metric:hover {
+    transform: translateY(-3px);
+}
+
+/* Better keyboard accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 4px;
+}
+
+/* Additional mobile improvements */
+@media (max-width: 650px) {
+
+    main {
+        padding: 15px;
+    }
+
+    .hero {
+        padding: 25px 6%;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .threshold-card {
+        padding: 18px;
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .metric strong {
+        font-size: 21px;
+    }
+
+    footer {
+        padding: 20px 12px;
+    }
+}

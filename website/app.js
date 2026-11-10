@@ -79,8 +79,15 @@ function updateMetrics() {
     document.getElementById("recall").textContent =
         (result.recall * 100).toFixed(2) + "%";
 
+    const p = Number(result.precision);
+    const r = Number(result.recall);
+
+    const f1 = (p + r) === 0
+        ? 0
+        : (2 * p * r) / (p + r);
+
     document.getElementById("f1").textContent =
-        Number(result.f1_score).toFixed(4);
+        f1.toFixed(4);
 
     document.getElementById("flagRate").textContent =
         (result.flag_rate * 100).toFixed(2) + "%";

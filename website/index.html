@@ -200,8 +200,13 @@
             <h2>06. Results & Threshold Analysis</h2>
 
             <p>
-                Move the slider to explore how the classification
-                threshold affects the model's performance.
+                
+             A lower threshold catches more actual defaulters but also creates more
+             false alarms. Since the dataset is imbalanced, accuracy can remain high
+             even when a model performs poorly at identifying defaulters.
+             Banks should choose thresholds based on the costs of false positives
+             and false negatives, rather than automatically using 0.5.
+
             </p>
 
             <div class="threshold-card">

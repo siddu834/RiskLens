@@ -1,0 +1,9 @@
+model,roc_auc_mean,roc_auc_std,pr_auc_mean,pr_auc_std,brier_mean,brier_std,notes
+Dummy Classifier,0.500000,0.000000,0.066842,0.000017,0.062374,0.000014,Prior probability baseline
+Logistic Regression,0.854959,0.004294,0.382761,0.006798,0.145141,0.000625,Interpretable linear baseline with balanced class weights
+Random Forest,0.858214,0.002335,0.386323,0.003738,0.095883,0.001092,300 trees with balanced class weights
+XGBoost,0.864398,0.003347,0.399660,0.005842,0.139791,0.000841,300 boosting trees with class imbalance weighting
+Logistic Regression - No Class Weight,0.849859,0.004232,0.377702,0.006131,0.050753,0.000322,No class weighting
+Logistic Regression - Balanced,0.854959,0.004294,0.382761,0.006798,0.145141,0.000625,Balanced class weighting
+Logistic Regression - SMOTE,0.854104,0.003985,0.382406,0.006610,0.145450,0.000643,SMOTE inside imblearn pipeline
+XGBoost - Tuned,0.864819,0.003349,0.400979,0.006476,0.139564,0.000909,RandomizedSearchCV with 20 trials optimizing PR-AUC

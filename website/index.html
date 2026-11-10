@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RiskLens | Credit Risk Analysis</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- 1. TITLE -->
+    <header class="hero">
+        <nav>
+            <h2>RiskLens</h2>
+            <span>Credit Risk Analysis</span>
+        </nav>
+
+        <div class="hero-content">
+            <p class="tag">MACHINE LEARNING PROJECT</p>
+
+            <h1>Understanding Credit Default Risk</h1>
+
+            <p>
+                Can machine learning identify customers who are likely
+                to experience serious financial difficulties?
+            </p>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- 2. PROBLEM / INTENDED CLAIM -->
+        <section class="section">
+            <h2>01. Problem & Intended Claim</h2>
+
+            <p>
+                The objective of RiskLens is to predict whether a customer
+                will experience serious financial difficulties within
+                the next two years.
+            </p>
+
+            <p>
+                We investigate whether machine learning models can use
+                historical financial and repayment information to estimate
+                credit default risk.
+            </p>
+
+            <div class="notice">
+                RiskLens is an experimental decision-support project,
+                not an automated lending decision system.
+            </div>
+        </section>
+
+
+        <!-- 3. DATA -->
+        <section class="section">
+            <h2>02. Dataset</h2>
+
+            <p>
+                This project uses the Give Me Some Credit dataset.
+            </p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>120,000</h3>
+                    <p>Development observations</p>
+                </div>
+
+                <div class="card">
+                    <h3>10</h3>
+                    <p>Input features</p>
+                </div>
+
+                <div class="card">
+                    <h3>6.684%</h3>
+                    <p>Development-set default rate</p>
+                </div>
+            </div>
+
+            <p>
+                The target variable is SeriousDlqin2yrs.
+                It indicates whether a customer experienced serious
+                delinquency within two years.
+            </p>
+
+            <p>
+                The dataset contains financial information, credit
+                utilization, age, repayment history and other
+                customer-related variables.
+            </p>
+        </section>
+
+
+        <!-- 4. PREPROCESSING -->
+        <section class="section">
+            <h2>03. Preprocessing</h2>
+
+            <ul>
+                <li>Invalid age values are treated as missing.</li>
+
+                <li>
+                    Special late-payment values 96 and 98 are handled
+                    as missing values with indicators.
+                </li>
+
+                <li>
+                    Missing numerical values are imputed using
+                    training-data medians.
+                </li>
+
+                <li>
+                    Extreme values in selected numerical features
+                    are capped using training-fold percentiles.
+                </li>
+
+                <li>
+                    Scaling is applied when required by the model.
+                </li>
+            </ul>
+
+            <p>
+                Preprocessing transformations are fitted using
+                training data to prevent data leakage.
+            </p>
+        </section>
+
+
+        <!-- 5. BASELINE AND METHODS -->
+        <section class="section">
+            <h2>04. Baseline & Methods</h2>
+
+            <div class="card">
+                <h3>Dummy Classifier</h3>
+                <p>
+                    Used as a simple baseline for comparison.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Logistic Regression</h3>
+                <p>
+                    Used as an interpretable linear classification
+                    baseline.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>XGBoost</h3>
+                <p>
+                    Used to capture nonlinear relationships and
+                    interactions between input features.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- 6. EVALUATION DESIGN -->
+        <section class="section">
+            <h2>05. Evaluation Design</h2>
+
+            <p>
+                Stratified cross-validation is used during model
+                development to maintain class proportions across folds.
+            </p>
+
+            <p>Evaluation metrics include:</p>
+
+            <ul>
+                <li>ROC-AUC</li>
+                <li>PR-AUC</li>
+                <li>Brier Score</li>
+                <li>Precision</li>
+                <li>Recall</li>
+                <li>F1 Score</li>
+            </ul>
+
+            <p>
+                The final test dataset is kept separate from
+                model development and used for final evaluation.
+            </p>
+
+            <h3>Calibration Curve</h3>
+
+            <img
+                src="../figures/calibration_curves_oof.png"
+                alt="Model calibration curve"
+                class="shap-image"
+            >
+
+        </section>
+
+
+        <!-- 7. RESULTS -->
+        <section class="section">
+            <h2>06. Results & Threshold Analysis</h2>
+
+            <p>
+                Move the slider to explore how the classification
+                threshold affects the model's performance.
+            </p>
+
+            <div class="threshold-card">
+
+                <h3>Classification Threshold</h3>
+
+                <h2 id="thresholdValue">0.23</h2>
+
+                <input
+                    type="range"
+                    id="thresholdSlider"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.23"
+                >
+
+                <div class="metrics">
+
+                    <div class="metric">
+                        <span>Precision</span>
+                        <strong id="precision">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>Recall</span>
+                        <strong id="recall">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>F1 Score</span>
+                        <strong id="f1">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>Flag Rate</span>
+                        <strong id="flagRate">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>True Positives</span>
+                        <strong id="tp">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>False Positives</span>
+                        <strong id="fp">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>False Negatives</span>
+                        <strong id="fn">-</strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>True Negatives</span>
+                        <strong id="tn">-</strong>
+                    </div>
+
+                </div>
+
+                <p id="status">Loading threshold data...</p>
+
+            </div>
+            <h3>Final Test Calibration</h3>
+
+            <img
+                src="../figures/final_test_calibration.png"
+                alt="Final test calibration curve"
+                class="shap-image"
+            >
+        </section>
+
+
+        <!-- 8. ERRORS -->
+        <section class="section">
+            <h2>07. Error Analysis</h2>
+
+            <div class="grid">
+
+                <div class="card">
+                    <h3>False Negatives</h3>
+                    <p>
+                        Actual defaulters incorrectly predicted
+                        as non-defaulters.
+                    </p>
+
+                    <img
+                        src="../figures/shap_fn_example.png"
+                        alt="False negative SHAP explanation"
+                        class="shap-image"
+                    >
+                </div>
+
+                <div class="card">
+                    <h3>False Positives</h3>
+                    <p>
+                        Actual non-defaulters incorrectly predicted
+                        as defaulters.
+                    </p>
+
+                    <img
+                        src="../figures/shap_fp_example.png"
+                        alt="False positive SHAP explanation"
+                        class="shap-image"
+                    >
+                </div>
+
+            </div>
+
+            <h3>Global Feature Importance</h3>
+
+            <img
+                src="../figures/shap_summary.png"
+                alt="SHAP summary plot"
+                class="shap-image"
+            >
+        </section>
+
+
+        <!-- 9. LIMITATIONS -->
+        <section class="section">
+            <h2>08. Limitations</h2>
+
+            <ul>
+                <li>
+                    Model predictions do not establish causal
+                    relationships.
+                </li>
+
+                <li>
+                    The dataset contains limited features and does
+                    not provide a complete credit bureau history.
+                </li>
+
+                <li>
+                    Historical Kaggle data from around 2011 may not
+                    represent current financial behaviour.
+                </li>
+
+                <li>
+                    Income information may contain self-reported
+                    values and data errors.
+                </li>
+
+                <li>
+                    Choosing a classification threshold requires
+                    real-world cost information.
+                </li>
+
+                <li>
+                    Group fairness across demographic groups has
+                    not been fully audited.
+                </li>
+            </ul>
+        </section>
+
+
+        <!-- 10. CONCLUSION -->
+        <section class="section">
+            <h2>09. Conclusion</h2>
+
+            <p>
+                RiskLens demonstrates how machine learning can be
+                applied to credit default risk prediction.
+            </p>
+
+            <p>
+                The project combines data preprocessing, model
+                comparison, threshold analysis, error investigation
+                and SHAP-based explanations.
+            </p>
+
+            <p>
+                The system should be treated as a decision-support
+                tool rather than an independent lending authority.
+            </p>
+        </section>
+
+
+        <!-- 11. REPRODUCTION -->
+        <section class="section">
+            <h2>10. Reproduction Steps</h2>
+
+            <ol>
+                <li>Clone or download the project repository.</li>
+                <li>Install the required Python packages.</li>
+                <li>Prepare the development dataset.</li>
+                <li>Run the notebooks in the notebooks folder.</li>
+                <li>Generate the model evaluation results.</li>
+                <li>Open this website using a local web server.</li>
+            </ol>
+
+            <p>Install dependencies using:</p>
+
+            <pre>pip install -r requirements.txt</pre>
+        </section>
+
+
+        <!-- 12. AI USE -->
+        <section class="section">
+            <h2>11. AI-Use Disclosure</h2>
+
+            <p>
+                AI tools were used for assistance with understanding
+                concepts, debugging code, improving documentation
+                and organizing parts of the project.
+            </p>
+
+            <p>
+                The project implementation, experiments and
+                interpretations should be reviewed and verified
+                by the project author.
+            </p>
+        </section>
+
+
+        <!-- 13. GITHUB -->
+        <section class="section">
+            <h2>12. GitHub Repository</h2>
+
+            <p>
+                Source code, notebooks and project documentation
+                are available in the project repository.
+            </p>
+
+            <a
+                href="https://github.com/siddu834"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button"
+            >
+                Visit GitHub
+            </a>
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>RiskLens | Credit Risk Analysis Project</p>
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
+

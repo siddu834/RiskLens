@@ -9,3 +9,18 @@ kaggle.json
 *.joblib
 .idea/
 .vscode/
+
+# Exclude row-level prediction and error records
+results/dev_oof_predictions.csv
+results/false_negative_examples.csv
+results/false_positive_examples.csv
+results/test_error_analysis.csv
+
+# Exclude raw datasets
+data/*.csv
+data/*.xlsx
+data/*.xls
+
+# Exclude Python environments
+venv/
+.venv/

@@ -1,0 +1,42 @@
+[
+    {
+        "mean_predicted_probability": 0.0035284945854210546,
+        "fraction_of_positives": 0.0033327778703549408
+    },
+    {
+        "mean_predicted_probability": 0.00659594595837751,
+        "fraction_of_positives": 0.006251041840306718
+    },
+    {
+        "mean_predicted_probability": 0.008905077382334241,
+        "fraction_of_positives": 0.01016327890703099
+    },
+    {
+        "mean_predicted_probability": 0.012110943338288311,
+        "fraction_of_positives": 0.012065235480113163
+    },
+    {
+        "mean_predicted_probability": 0.01730698865339127,
+        "fraction_of_positives": 0.018018018018018018
+    },
+    {
+        "mean_predicted_probability": 0.02629385818552945,
+        "fraction_of_positives": 0.02418480527061963
+    },
+    {
+        "mean_predicted_probability": 0.04202544773506685,
+        "fraction_of_positives": 0.04258688224018668
+    },
+    {
+        "mean_predicted_probability": 0.06761920907844725,
+        "fraction_of_positives": 0.06579495294411593
+    },
+    {
+        "mean_predicted_probability": 0.11757406457164624,
+        "fraction_of_positives": 0.1207370966397065
+    },
+    {
+        "mean_predicted_probability": 0.366789925822368,
+        "fraction_of_positives": 0.36533333333333334
+    }
+]

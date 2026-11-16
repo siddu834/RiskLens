@@ -243,7 +243,7 @@ We used AI tools only as a support resource for brainstorming, debugging, editin
 
 - **G Surya Siddardha Reddy:** Led data access and auditing, preprocessing, baseline and model comparisons, and probability calibration.
 - **Marimireddy Deekshith Reddy:** Led evaluation design, threshold and error analysis, website interactions, reproducibility checks, and deployment.
-- **Both students:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
+- **Both:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
 
 AI tools were used as a support resource during drafting, debugging, and presentation work. The student team made the project decisions and is responsible for the final results.
 

@@ -16,4 +16,37 @@
 #dotField .caught { background:#ffbc86; border-color:#ffbc86; }
 .section-head .index { color:#66458d; }
 .topbar { border-bottom:2px solid #55347c; }
+.workspace-nav { display:flex; gap:.35rem; align-items:flex-start; }
+.workspace-nav a { padding:.8rem 1rem; color:#ccd7ea; text-decoration:none; border-radius:.6rem; }
+.workspace-nav a[aria-current=page] { background:#ccf68d; color:#122519; font-weight:700; }
+body { background:#101929; }
+.topbar { position:relative; background:#101929; border-bottom:1px solid #344459; }
+.topbar .brand,.topbar nav a,.topbar .brand span { color:#e8edf6; }
+main { display:grid; grid-template-columns:13rem minmax(0,1fr); align-items:start; padding:1.4rem 2%; gap:1rem; }
+.workspace-nav { grid-column:1; grid-row:1 / span 16; position:sticky; top:1rem; flex-direction:column; }
+main > section,main > footer { grid-column:2; min-width:0; }
+main > section[hidden] { display:none; }
+main > .section { background:#f4f6f9; border-radius:1rem; padding:clamp(1rem,3vw,3rem); margin:0; }
+main > .studio { background:radial-gradient(ellipse at 80% 10%,#234c53,transparent 62%),#16283a; border:1px solid #45616e; border-radius:1rem; }
+.studio h1,.section h2 { font-family:Manrope,system-ui,sans-serif; font-weight:800; }
+.studio h1 em,.studio .text-link,.studio .eyebrow { color:#c9f789; }
+.studio .button { background:#c9f789; }
+.scope { background:#0e202e; border-color:#437079; }
+#dotField i { border-color:#637887; transition:background .22s,transform .22s; transform:scale(.76); }
+#dotField .caught { background:#c9f789; border-color:#c9f789; transform:scale(1); }
+.utilization-control { background:#dae7f3; border-radius:.8rem; padding:1rem; margin:1rem 0; }
+.utilization-control label { display:flex; justify-content:space-between; font-weight:700; }
+.utilization-control input { width:100%; accent-color:#305f69; }
+@media(prefers-reduced-motion:no-preference) {
+  main > section:not([hidden]) { animation:enter-room .38s ease-out both; }
+  @keyframes enter-room { from { opacity:0; transform:translateY(10px); } }
+  #probabilityFill { transition:width .4s ease-out; }
+}
+@media(prefers-reduced-motion:reduce) { #dotField i { transition:none; } }
+@media(max-width:1000px) {
+  main { display:block; }
+  .workspace-nav { flex-direction:row; overflow:auto; position:sticky; top:0; background:#101929; z-index:10; padding:.5rem 0; }
+  .workspace-nav a { flex:none; font-size:.85rem; }
+  main > section { margin-bottom:1rem; scroll-margin-top:4rem; }
+}
 @media(max-width:760px) { .studio { display:grid; grid-template-columns:minmax(0,1fr); } }

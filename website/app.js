@@ -32,6 +32,7 @@ async function loadThresholdData() {
         document.getElementById("status").textContent =
             "Threshold data loaded successfully.";
 
+        slider.disabled = false;
         updateMetrics();
 
     }
@@ -79,6 +80,9 @@ function updateMetrics() {
     document.getElementById("recall").textContent =
         (result.recall * 100).toFixed(2) + "%";
 
+    const total = result.tp + result.fp + result.fn + result.tn;
+    document.getElementById("cost").textContent = ((10 * result.fn + result.fp) / total * 1000).toFixed(1);
+    document.getElementById("tradeoff").textContent = `At ${Number(result.threshold).toFixed(2)}, catch ${result.tp.toLocaleString()} positive cases, miss ${result.fn.toLocaleString()}, and raise ${result.fp.toLocaleString()} false alarms.`;
     const p = Number(result.precision);
     const r = Number(result.recall);
 

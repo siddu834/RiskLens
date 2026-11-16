@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RiskLens | Credit Risk Analysis</title>
+    <title>RiskLens | Serious Delinquency Study</title>
+    <meta name="description" content="A reproducible comparison of credit delinquency models, calibration and threshold tradeoffs.">
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
     <!-- 1. TITLE -->
     <header class="hero">
@@ -22,26 +25,25 @@
         <div class="hero-content">
             <p class="tag">MACHINE LEARNING PROJECT</p>
 
-            <h1>Understanding Credit Default Risk</h1>
+            <h1>Estimating Serious Delinquency Risk</h1>
 
             <p>
-                Can machine learning identify customers who are likely
-                to experience serious financial difficulties?
+                How much do nonlinear models improve serious-delinquency ranking over logistic regression, and what errors remain?
             </p>
         </div>
     </header>
 
 
-    <main>
+    <main id="main">
 
         <!-- 2. PROBLEM / INTENDED CLAIM -->
         <section class="section">
             <h2>01. Problem & Intended Claim</h2>
 
             <p>
-                The objective of RiskLens is to predict whether a customer
-                will experience serious financial difficulties within
-                the next two years.
+                The objective of RiskLens is to estimate the probability of
+                serious delinquency within two years, using the labeled
+                target SeriousDlqin2yrs.
             </p>
 
             <p>
@@ -62,7 +64,7 @@
             <h2>02. Dataset</h2>
 
             <p>
-                This project uses the Give Me Some Credit dataset.
+                This project uses 150,000 labeled records from the <a href="https://www.kaggle.com/competitions/GiveMeSomeCredit/data">Give Me Some Credit dataset</a>: 120,000 development records and 30,000 held-out test records.
             </p>
 
             <div class="grid">
@@ -105,7 +107,7 @@
 
                 <li>
                     Special late-payment values 96 and 98 are handled
-                    as missing values with indicators.
+                    as missing values with one combined sentinel indicator.
                 </li>
 
                 <li>
@@ -150,7 +152,7 @@
             </div>
 
             <div class="card">
-                <h3>XGBoost</h3>
+                <h3>Random Forest & XGBoost</h3>
                 <p>
                     Used to capture nonlinear relationships and
                     interactions between input features.
@@ -164,8 +166,7 @@
             <h2>05. Evaluation Design</h2>
 
             <p>
-                Stratified cross-validation is used during model
-                development to maintain class proportions across folds.
+                An 80/20 stratified split uses RANDOM_SEED=42. Five-fold shuffled stratified cross-validation also uses seed 42. Imputation, capping and scaling are fitted inside training folds; SMOTE is applied only within training folds.
             </p>
 
             <p>Evaluation metrics include:</p>
@@ -180,14 +181,13 @@
             </ul>
 
             <p>
-                The final test dataset is kept separate from
-                model development and used for final evaluation.
+                The holdout was separated before development. The maintenance rerun repeats the frozen evaluation; it is not a new untouched test. Search selection and CV reporting reuse folds, so development scores are selection-influenced. PR-AUC here means average precision, not trapezoidal area.
             </p>
 
             <h3>Calibration Curve</h3>
 
             <img
-                src="../figures/calibration_curves_oof.png"
+                src="figures/calibration_curves_oof.png"
                 alt="Model calibration curve"
                 class="shap-image"
             >
@@ -198,6 +198,15 @@
         <!-- 7. RESULTS -->
         <section class="section">
             <h2>06. Results & Threshold Analysis</h2>
+<h3>Development cross-validation comparison</h3>
+            <div class="table-wrap"><table><caption>Five-fold means; before calibration</caption><thead><tr><th>Model</th><th>Average precision</th><th>ROC-AUC</th><th>Brier score ↓</th></tr></thead><tbody>
+            <tr><td>Dummy</td><td>0.0668</td><td>0.5000</td><td>0.0624</td></tr>
+            <tr><td>Logistic regression (balanced)</td><td>0.3828</td><td>0.8550</td><td>0.1451</td></tr>
+            <tr><td>Random forest</td><td>0.3863</td><td>0.8582</td><td>0.0959</td></tr>
+            <tr><td>XGBoost baseline</td><td>0.3986</td><td>0.8645</td><td>0.1397</td></tr>
+            <tr><td>XGBoost rerun search winner</td><td>0.4013</td><td>0.8649</td><td>0.1392</td></tr>
+            </tbody></table></div>
+            <p>The rerun search winner differs from the original frozen XGBoost configuration. The final test below evaluates the original configuration with isotonic calibration. Strong ranking does not guarantee accurate probabilities: class weighting especially changes their scale.</p>
 
             <p>
                 
@@ -211,19 +220,23 @@
 
             <div class="threshold-card">
 
-                <h3>Classification Threshold</h3>
+                <h3>Development-set Threshold Explorer</h3>
+                <p>These metrics use out-of-fold predictions for 120,000 development records. They are not the held-out test results. The default 0.23 is the original reporting threshold. The rerun development F1 optimum is 0.22; 0.09 minimizes an illustrative 10:1 false-negative/false-positive cost. The fixed test reporting threshold has not been retuned.</p>
 
-                <h2 id="thresholdValue">0.23</h2>
+                <label for="thresholdSlider">Probability threshold</label><h2 id="thresholdValue">0.23</h2>
 
                 <input
                     type="range"
                     id="thresholdSlider"
+                    aria-describedby="thresholdHelp" disabled
+                    aria-label="Classification threshold"
                     min="0"
                     max="1"
                     step="0.01"
                     value="0.23"
                 >
 
+                <p id="thresholdHelp">Use the arrow keys or drag the slider. Positive means serious delinquency within two years; a flag is a model prediction, not a lending decision.</p>
                 <div class="metrics">
 
                     <div class="metric">
@@ -268,13 +281,26 @@
 
                 </div>
 
-                <p id="status">Loading threshold data...</p>
+                <p id="tradeoff" aria-live="polite"></p>
+                <p>Illustrative cost per 1,000 records (FN = 10 units; FP = 1): <strong id="cost">—</strong>. These are assumed relative costs, not measured financial savings.</p>
+                <p id="status" role="status">Loading threshold data...</p>
 
             </div>
+            <h3>Held-out Test Results</h3>
+            <p id="finalTestSummary">Run the website build to insert the current saved test metrics here.</p>
+            <details>
+                <summary>Download the development evaluation data</summary>
+                <ul>
+                    <li><a href="data/threshold_metrics.json">Threshold counts and metrics (JSON)</a></li>
+                    <li><a href="data/metrics_summary.json">Development summary (JSON)</a></li>
+                    <li><a href="data/roc_pr.json">ROC and precision–recall curves (JSON)</a></li>
+                    <li><a href="data/calibration.json">Calibration curve (JSON)</a></li>
+                </ul>
+            </details>
             <h3>Final Test Calibration</h3>
 
             <img
-                src="../figures/final_test_calibration.png"
+                src="figures/final_test_calibration.png"
                 alt="Final test calibration curve"
                 class="shap-image"
             >
@@ -284,6 +310,8 @@
         <!-- 8. ERRORS -->
         <section class="section">
             <h2>07. Error Analysis</h2>
+<p>At the fixed test threshold 0.23, the model misses 1,011 of 2,005 positive cases and incorrectly flags 1,443 negative cases. In the first 20 examples per category, missed positives have lower average revolving utilization (0.467 versus 0.815) and fewer recorded 90-day late payments (0.05 versus 0.60). This small, ordered sample is illustrative; it is not representative evidence of all errors.</p>
+            <p>SHAP plots below explain a separately fitted, uncalibrated XGBoost model in raw margin (log-odds) units. They do not directly explain the final calibrated ensemble probability. Error labels refer to the final classifier at threshold 0.23.</p>
 
             <div class="grid">
 
@@ -295,7 +323,7 @@
                     </p>
 
                     <img
-                        src="../figures/shap_fn_example.png"
+                        src="figures/shap_fn_example.png"
                         alt="False negative SHAP explanation"
                         class="shap-image"
                     >
@@ -309,7 +337,7 @@
                     </p>
 
                     <img
-                        src="../figures/shap_fp_example.png"
+                        src="figures/shap_fp_example.png"
                         alt="False positive SHAP explanation"
                         class="shap-image"
                     >
@@ -320,7 +348,7 @@
             <h3>Global Feature Importance</h3>
 
             <img
-                src="../figures/shap_summary.png"
+                src="figures/shap_summary.png"
                 alt="SHAP summary plot"
                 class="shap-image"
             >
@@ -330,6 +358,7 @@
         <!-- 9. LIMITATIONS -->
         <section class="section">
             <h2>08. Limitations</h2>
+<p>The random split does not test future periods. There are 609 duplicate full rows, and 173 test records share feature profiles with development records. Excluding those profiles gives test average precision 0.4040; identical profiles do not establish borrower identity. Search-fold reuse, sampled errors, and missing subgroup audits further limit the claim.</p>
 
             <ul>
                 <li>
@@ -368,23 +397,10 @@
         <!-- 10. CONCLUSION -->
         <section class="section">
             <h2>09. Conclusion</h2>
-
-            <p>
-                RiskLens demonstrates how machine learning can be
-                applied to credit default risk prediction.
-            </p>
-
-            <p>
-                The project combines data preprocessing, model
-                comparison, threshold analysis, error investigation
-                and SHAP-based explanations.
-            </p>
-
-            <p>
-                The system should be treated as a decision-support
-                tool rather than an independent lending authority.
-            </p>
-        </section>
+<p>On development CV, balanced logistic regression achieved average precision 0.3828, random forest 0.3863, and the rerun XGBoost search winner 0.4013. The XGBoost gain over logistic regression was 0.0185 absolute (about 4.8% relative), a modest observed improvement without a paired significance analysis.</p>
+            <p>For the original fixed XGBoost configuration, isotonic calibration reduced out-of-fold Brier score from 0.13948 to 0.04906. Its reproduced final held-out average precision was 0.4045. These are different evaluation stages: the newly selected search winner was not substituted into the final model.</p>
+            <p>Complexity improved ranking modestly, while calibration substantially improved probability error. A calibrated logistic model could remain attractive where interpretability matters, but calibrated logistic regression was not evaluated here, so this study cannot establish its relative suitability. The final threshold still misses roughly half the positive cases. Historical data, duplicate profiles, illustrative costs and incomplete fairness checks prevent operational claims.</p>
+</section>
 
 
         <!-- 11. REPRODUCTION -->
@@ -393,11 +409,11 @@
 
             <ol>
                 <li>Clone or download the project repository.</li>
-                <li>Install the required Python packages.</li>
-                <li>Prepare the development dataset.</li>
-                <li>Run the notebooks in the notebooks folder.</li>
-                <li>Generate the model evaluation results.</li>
-                <li>Open this website using a local web server.</li>
+                <li>Use Python 3.13, create a virtual environment, and install <code>requirements.txt</code>.</li>
+                <li>Obtain <code>cs-training.csv</code> and <code>Data Dictionary.xls</code> from Kaggle and place them in <code>data/</code>. Do not download Kaggle credentials into the repository.</li>
+                <li>Run <code>python scripts/reproduce.py</code> from the repository root: notebooks 00–08 execute in order, including the seed-42 stratified 80/20 split.</li>
+                <li>Run <code>python scripts/audit_data.py</code>. Compare saved metrics against <code>docs/reproduction_report.md</code>; numerical differences and search winners can vary.</li>
+                <li>Run <code>python scripts/build_site.py</code>, then <code>python -m http.server 8000 --directory site</code>.</li>
             </ol>
 
             <p>Install dependencies using:</p>
@@ -411,9 +427,9 @@
             <h2>11. AI-Use Disclosure</h2>
 
             <p>
-                AI tools were used for assistance with understanding
+                AI assistance (including OpenAI Codex during repository maintenance) was used for understanding
                 concepts, debugging code, improving documentation
-                and organizing parts of the project.
+                and organizing parts of the project. Subsequent repository maintenance also used AI assistance for code fixes, experiment execution, tests, website implementation and documentation. AI assistance does not establish independent validation or authorship of the original dataset.
             </p>
 
             <p>
@@ -434,7 +450,7 @@
             </p>
 
             <a
-                href="https://github.com/siddu834"
+                href="https://github.com/siddu834/RiskLens"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="button"
@@ -451,6 +467,7 @@
     </footer>
 
 
+    <noscript>The threshold explorer requires JavaScript. The results and narrative above remain readable.</noscript>
     <script src="app.js"></script>
 
 </body>

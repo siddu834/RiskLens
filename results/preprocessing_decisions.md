@@ -5,7 +5,7 @@
 | Issue                                        | Decision                                                                             | Reason                                                                                                      |
 | -------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | Age = 0                                      | Replace with NaN                                                                     | Age zero is an invalid borrower age.                                                                        |
-| Late-payment values 96 and 98                | Replace with NaN and create separate indicator features for each late-payment column | These values are unusual and may represent sentinel values rather than genuine counts.                      |
+| Late-payment values 96 and 98                | Replace with NaN and create one combined `late_payment_sentinel` indicator | These values are unusual and may represent sentinel values rather than genuine counts.                      |
 | Extreme RevolvingUtilizationOfUnsecuredLines | Cap at the 99th percentile, calculated using training data only                      | Reduces the influence of extreme observations while avoiding data leakage.                                  |
 | Extreme DebtRatio                            | Cap at the 99th percentile, calculated using training data only                      | Reduces the influence of extreme observations while preserving most observations.                           |
 | MonthlyIncome missing                        | Median imputation with a missing-value indicator                                     | Median imputation is less sensitive to extreme values, and the indicator preserves missingness information. |
@@ -13,7 +13,7 @@
 
 ## 2. Feature Engineering
 
-No additional engineered features will be introduced in the initial preprocessing stage.
+The initial preprocessing adds missingness flags for age, MonthlyIncome and NumberOfDependents, plus one combined late-payment sentinel flag.
 
 Additional features may be evaluated later through model validation to determine whether they improve predictive performance.
 
@@ -42,9 +42,9 @@ The preprocessing decisions will be evaluated during model development using app
 
 ### 5.2 Handling Sentinel Values in Late-Payment Features
 
-**Transformation:** Replace values 96 and 98 with NaN in all three late-payment columns. Create a separate binary indicator for each column to identify these unusual values.
+**Transformation:** Replace values 96 and 98 with NaN in all three late-payment columns. Create one combined binary indicator, `late_payment_sentinel`, that is 1 when any of the three columns contains 96 or 98.
 
-**Reason:** EDA identified these values as unusual observations that may represent sentinel values rather than genuine late-payment counts. The indicators preserve information about which observations contained these values.
+**Reason:** EDA identified these values as unusual observations that may represent sentinel values rather than genuine late-payment counts. The combined indicator preserves which customers contained these values. EDA found that the sentinel values co-occurred across all three columns, so separate flags would be redundant in the observed development data.
 
 **Type:** Fixed rule. The values 96 and 98 are predefined based on EDA.
 

@@ -1,0 +1,47 @@
+[
+  {
+    "notebook": "00_lock_split.ipynb",
+    "seconds": 22.29,
+    "status": "passed"
+  },
+  {
+    "notebook": "02_preprocessing_check.ipynb",
+    "seconds": 13.74,
+    "status": "passed"
+  },
+  {
+    "notebook": "07_final_test.ipynb",
+    "seconds": 25.09,
+    "status": "passed"
+  },
+  {
+    "notebook": "01_eda.ipynb",
+    "seconds": 18.2,
+    "status": "passed"
+  },
+  {
+    "notebook": "03_baselines.ipynb",
+    "seconds": 14.95,
+    "status": "passed"
+  },
+  {
+    "notebook": "04_models.ipynb",
+    "seconds": 397.81,
+    "status": "passed"
+  },
+  {
+    "notebook": "05_calibration.ipynb",
+    "seconds": 574.56,
+    "status": "passed"
+  },
+  {
+    "notebook": "06_thresholds.ipynb",
+    "seconds": 61.47,
+    "status": "passed"
+  },
+  {
+    "notebook": "08_errors_shap.ipynb",
+    "seconds": 35.19,
+    "status": "passed"
+  }
+]

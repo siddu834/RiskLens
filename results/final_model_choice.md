@@ -1,38 +1,26 @@
 # Final Model Choice — RiskLens
 
-## 1. Selected Model
+## Fixed reference model
 
-Tuned XGBoost with isotonic probability calibration.
+The final evaluation reproduces the originally selected XGBoost configuration with isotonic calibration (`CalibratedClassifierCV`, five folds):
 
-## 2. Reason for Selection
+- 300 estimators; maximum depth 4; learning rate 0.05.
+- Minimum child weight 5; subsample 0.8; column subsample 1.0; L2 regularization 1.0.
+- Positive-class weight is the development negative/positive count ratio.
+- Seed 42; two workers in this rerun.
 
-Tuned XGBoost achieved the highest ROC-AUC (0.864819) and PR-AUC (0.400979) among the evaluated models.
+## Reproduction finding
 
-After isotonic calibration, its Brier score improved from 0.139478 to 0.049029, slightly outperforming calibrated Random Forest (0.049563).
+The new 20-trial development search selected depth 5, learning rate 0.03, minimum child weight 7, subsample 0.9 and column subsample 0.8, with average precision 0.4012569. The original search reported 0.4009789 for the fixed reference configuration. These are different runs, not a paired demonstration of improvement. The exact cause of the change has not been isolated.
 
-Therefore, calibrated Tuned XGBoost was selected as the final candidate based on its ranking performance and probability calibration.
+`cv_results.csv` labels the new search winner explicitly. Notebooks 05–08 retain the original parameters so that the held-out test evaluation is a reproduction of a fixed candidate, not a new test-driven selection. Development selection and reporting reuse folds; their scores are not an unbiased nested-CV estimate.
 
-## 3. Class Imbalance Handling
+## Threshold policy
 
-The selected XGBoost model uses scale_pos_weight to account for class imbalance.
+The reporting threshold remains **0.23**, selected by F1 in the original development out-of-fold analysis. **0.09** is the original illustrative cost scenario using `50,000 × FN + 5,000 × FP`. These assumed costs are not measured financial losses or an operational lending policy. Recomputed threshold optima are documented in the reproduction report; they do not automatically change the frozen reporting threshold.
 
-## 4. Probability Calibration
+## Holdout policy
 
-The model uses isotonic probability calibration with 5-fold cross-validation.
+The original holdout split and fixed model were rerun. No test outcomes were used to change hyperparameters or thresholds. Current computed results are in `final_test_metrics.json`; historical values are in `original_final_test_metrics.json`. The duplicate-profile subset analysis is a diagnostic, not a newly untouched test set.
 
-## 5. Reporting Threshold
-
-The threshold analysis identified:
-
-* 0.23 as the threshold with the highest F1-score.
-* 0.09 as the threshold with the lowest illustrative business cost.
-
-A threshold of 0.09 is selected provisionally for risk screening because the illustrative cost function assigns a higher penalty to false negatives.
-
-These costs are assumptions and should not be interpreted as actual financial losses.
-
-## 6. Test Set Policy
-
-The model and reporting threshold were selected using development-set results only.
-
-The locked test set will be evaluated once. Its results will not be used for further model or threshold tuning.
+The metric labeled PR-AUC is scikit-learn average precision. Training-set calibration figures are diagnostic; out-of-fold comparisons are used for calibration assessment. No statistical significance or real-world lending effectiveness is claimed.

@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-15",
+  "scope": "Clean source snapshot; existing validated Python environment; notebooks 00, 02, 07. Not a fresh-install or remote-clone test.",
+  "metrics": {
+    "roc_auc": {
+      "reference": 0.869423984243713,
+      "clean_copy": 0.869423984243713,
+      "absolute_difference": 0.0
+    },
+    "pr_auc": {
+      "reference": 0.40447046202889575,
+      "clean_copy": 0.40447046202889575,
+      "absolute_difference": 0.0
+    },
+    "brier_score": {
+      "reference": 0.048664854802564037,
+      "clean_copy": 0.048664854802564037,
+      "absolute_difference": 0.0
+    },
+    "threshold": {
+      "reference": 0.23,
+      "clean_copy": 0.23,
+      "absolute_difference": 0.0
+    },
+    "precision": {
+      "reference": 0.40787853918752565,
+      "clean_copy": 0.40787853918752565,
+      "absolute_difference": 0.0
+    },
+    "recall": {
+      "reference": 0.49576059850374066,
+      "clean_copy": 0.49576059850374066,
+      "absolute_difference": 0.0
+    },
+    "f1_score": {
+      "reference": 0.4475461503827105,
+      "clean_copy": 0.4475461503827105,
+      "absolute_difference": 0.0
+    },
+    "tn": {
+      "reference": 26552,
+      "clean_copy": 26552,
+      "absolute_difference": 0
+    },
+    "fp": {
+      "reference": 1443,
+      "clean_copy": 1443,
+      "absolute_difference": 0
+    },
+    "fn": {
+      "reference": 1011,
+      "clean_copy": 1011,
+      "absolute_difference": 0
+    },
+    "tp": {
+      "reference": 994,
+      "clean_copy": 994,
+      "absolute_difference": 0
+    }
+  }
+}

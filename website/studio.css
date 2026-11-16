@@ -86,7 +86,6 @@ main a:focus-visible,main button:focus-visible,.topbar a:focus-visible {
 .signature button { position:relative; width:24px; padding:0; border:0; background:transparent; color:#142333; cursor:pointer; }
 .signature svg { display:block; width:100%; border-radius:6px; pointer-events:none; }
 .signature button:is(:hover,:focus) { z-index:2; }
-.signature button:is(:hover,:focus) svg { background:#163047; color:#ddffaa; box-shadow:0 4px 8px #0006; }
 @media (prefers-reduced-motion:no-preference) {
   .signature svg { transition:transform .24s cubic-bezier(.2,1.5,.4,1); }
   .signature button:first-child svg { transform-origin:right center; }

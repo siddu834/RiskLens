@@ -76,7 +76,7 @@ def build():
     assets = Assets()
     assets.feed((destination / 'index.html').read_text(encoding='utf-8'))
     for relative in assets.paths:
-        path = (destination / relative).resolve()
+        path = (destination / relative.partition('?')[0]).resolve()
         if not path.is_relative_to(destination.resolve()) or not path.is_file():
             raise ValueError(f'Missing or external site asset: {relative}')
     print('Website built; JSON and referenced assets verified:', destination)

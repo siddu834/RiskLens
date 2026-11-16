@@ -58,6 +58,26 @@ function openRoom() {
 window.addEventListener('hashchange', openRoom);
 openRoom();
 
+let previousScroll = window.scrollY;
+let scrollDirection = 1;
+window.addEventListener('scroll', () => {
+  const currentScroll = window.scrollY;
+  if (Math.abs(currentScroll - previousScroll) > 2) {
+    scrollDirection = currentScroll > previousScroll ? 1 : -1;
+  }
+  previousScroll = currentScroll;
+}, {passive:true});
+const sectionObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    entry.target.style.setProperty('--scroll-direction', scrollDirection);
+    entry.target.classList.remove('scroll-arrived');
+    void entry.target.offsetWidth;
+    entry.target.classList.add('scroll-arrived');
+  }
+}, {threshold:.18});
+document.querySelectorAll('main > section').forEach(section => sectionObserver.observe(section));
+
 const utilization = document.getElementById('RevolvingUtilizationOfUnsecuredLines');
 const scrubber = document.createElement('div');
 scrubber.className = 'utilization-control';

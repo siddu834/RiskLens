@@ -41,6 +41,30 @@ main > .studio { background:radial-gradient(ellipse at 80% 10%,#234c53,transpare
   main > section:not([hidden]) { animation:enter-room .38s ease-out both; }
   @keyframes enter-room { from { opacity:0; transform:translateY(10px); } }
   #probabilityFill { transition:width .4s ease-out; }
+  .topbar nav a,.workspace-nav a,.actions a,.preset-row button,.segmented button,.download-row a {
+    display:inline-block;
+    transition:transform .24s cubic-bezier(.2,1.7,.4,1),box-shadow .24s ease,background-color .24s ease;
+    transform-origin:center;
+  }
+  .topbar nav a:hover,.workspace-nav a:hover,.actions a:hover,.preset-row button:hover,.segmented button:hover,.download-row a:hover {
+    transform:translateY(-4px) scale(1.06);
+    box-shadow:0 9px 22px #07132140;
+  }
+  .topbar nav a:active,.workspace-nav a:active,.actions a:active,.preset-row button:active,.segmented button:active,.download-row a:active {
+    transform:translateY(1px) scale(.97);
+  }
+  main > section.scroll-arrived:not([hidden]) {
+    animation:scroll-settle .6s cubic-bezier(.22,.8,.25,1) both;
+  }
+  @keyframes scroll-settle {
+    0% { opacity:.82; transform:translateY(calc(var(--scroll-direction,1) * 18px)); }
+    56% { opacity:1; transform:translateY(calc(var(--scroll-direction,1) * -5px)); }
+    100% { transform:translateY(0); }
+  }
+}
+main a:focus-visible,main button:focus-visible,.topbar a:focus-visible {
+  outline:3px solid #b7e969;
+  outline-offset:4px;
 }
 @media(prefers-reduced-motion:reduce) { #dotField i { transition:none; } }
 @media(max-width:1000px) {

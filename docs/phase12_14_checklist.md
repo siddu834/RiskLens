@@ -1,48 +1,23 @@
-# Phases 12–14: delivery and verification
+# Phases 12â€“14 checkpoint
 
-## Website
+## Phase 12 â€” website
 
-The source is `website/`; `python scripts/build_site.py` produces the self-contained `site/` deployment bundle with figures and saved final-test results. The build also refreshes `metrics_summary.json`, `roc_pr.json` and `calibration.json` from notebook exports. `threshold_metrics.json` contains 101 development out-of-fold threshold rows. Legacy filenames remain for notebook compatibility.
+The source lives in `website/`; `python scripts/build_site.py` creates `site/` for GitHub Actions deployment. The original website was deployed successfully on 16 November 2026. The ES335 redesign adds actual input-based browser predictions, fictional presets, scenario comparisons, evaluation charts, and a threshold/cost explorer, while retaining all required research sections.
 
-The page follows the requested section order. The slider reports TP, FP, FN, TN, precision, recall, F1, flag rate and illustrative relative cost per 1,000 records. Its range is 0–1 in steps of 0.01, using the nearest saved row. It is disabled until data loads, announces updates for assistive technology, and reports loading failures.
+The browser model is exported from the same frozen calibrated ensemble used for final metrics. It is not a fabricated risk formula or a lookup of nearest profiles. Input values stay in memory on the visitor's device. Raw borrower rows and private test fixtures are excluded from publication.
 
-## GitHub Pages deployment
+## Phase 13 â€” reproducibility
 
-GitHub write access was confirmed on 16 November 2026 after reconnecting the repository owner account. The review branch is improve/resume-readiness. Deployment and live verification are pending.
+Completed: clean public HTTPS clone, new Python environment with all dependencies installed, dependency consistency check, seven regression tests, final-model reproduction with exact saved AP/ROC/Brier agreement, 200 synthetic plus 30,000 private browser parity comparisons, strict JSON and asset build.
 
-Deployment steps:
+The initial Jupyter startup stall was resolved once local networking was available. Notebooks 00, 02 and 07 passed in the fresh environment and the runner exited 0; the standalone exporter also reproduces the final model. A second full nine-notebook search run in this environment is not claimed. Earlier full-run evidence is preserved in the reproduction report.
 
-1. Publish the prepared changes on a review branch and review the diff.
-2. In repository Settings → Pages, select **GitHub Actions** as the source.
-3. Merge the reviewed changes to `main`, or manually run the Deploy RiskLens Website workflow from the reviewed branch if the environment permits it.
-4. Wait for successful deployment. The workflow builds and uploads `site/`; no `/website` branch-folder selection is needed.
-5. Open https://siddu834.github.io/RiskLens/ in a private browser window. Check all sections, images, links, and slider values at 0, 0.23, 0.50 and 1. Verify requests have no missing assets.
+## Phase 14 â€” narrative and rubric
 
-The live URL and private-window checks remain incomplete until deployment succeeds. Do not present the intended address as a working demo on a resume yet.
+Completed: precise target and unit, dataset quality evidence, justified methods and preprocessing, evaluation diagram, stage-specific results, aggregate errors, conditional uncertainty, limits, conclusion, reproduction and AI disclosure. See `docs/es335_rubric.md` for the 100-point evidence map.
 
-## Reproducibility and narrative
+Awaiting students: actual contribution statement and original-proposal alignment. User deferred those details. The course portal submission is a separate student action; the PDFs specify 17 November 2026, 11:59 PM IST.
 
-README documents data access, Python setup, split, seed, notebook order, metric definition and results. The conclusion distinguishes CV selection, calibration and frozen-model test evaluation. It labels modest lift, errors, untested calibrated logistic regression, dataset overlap and fairness limitations. Codex assistance is disclosed.
+## Publication checks
 
-The supplied phase list is the alignment reference. The original proposal was not supplied separately, so exact promise-by-promise alignment with that document has not been verified.
-
-## Local checks on 15 November 2026
-
-- Seven preprocessing/reporting tests passed; site build validated strict JSON and referenced assets; JavaScript syntax and Git whitespace checks passed.
-- Browser interaction verified thresholds 0, 0.23, 0.24, 0.50 and 1. At 0: TP 8,021, FN 0, FP 111,979. At 0.50: TP 1,455, FN 6,566, FP 931. At 1: TP 2, FN 8,019, FP 0. An isotonic probability can equal 1, so the endpoint need not flag zero records.
-- All five figures loaded. At a 390-pixel mobile viewport the page did not overflow horizontally. Keyboard interaction and status updates worked.
-- A targeted scan of 55 tracked/publishable source files found no personal absolute paths, credential filenames, private-key headers, or recognizable GitHub/AWS token patterns. This is not a comprehensive secret-history audit.
-- Seed review confirmed the stratified split, shuffled CV, randomized search, SMOTE and stochastic model fits use 42 (directly or via `RANDOM_SEED`). Deterministic inner calibration folds do not require a seed.
-- Local `git clone` failed in the Windows Git helper with access denied. A source snapshot was extracted into a clean directory, with raw source data copied separately. This is a clean-copy test, not verification of cloning the unpublished changes from GitHub.
-- In that clean copy, notebooks 00, 02 and 07 completed with the existing validated environment and the runner exited 0. All final numeric metrics matched within `1e-8`. A nonfatal joblib cleanup warning was observed; details and scope are in the reproduction report.
-- A new Python 3.13 environment was created. Installation from `requirements.txt` and `requirements-checks.txt` was attempted twice: the first failed on package-host DNS lookup, and the second resolved dependencies and downloaded most packages before a remote connection reset. Installation did not complete. Consequently, fresh-install execution and the full fresh-clone checkpoint remain **incomplete**, despite the successful clean-copy check. Retry the documented installation on a working connection; do not treat this as a verified fresh-environment run.
-
-## Checkpoint status
-
-| Phase | Completed | Still incomplete |
-|---|---|---|
-| 12 | Website, requested data files, useful interaction, mobile/browser checks, GitHub link, deployment workflow | Remote publication, live URL and private-window live test |
-| 13 | README, seed review, targeted secret/path scan, clean-source reproduction of final metrics | Successful fresh dependency installation and remote fresh-clone test |
-| 14 | Quantitative conclusion, errors and limitations, cautious claims, rubric section alignment, AI disclosure | Exact alignment with an original proposal not supplied to this task |
-
-GitHub supports branch publishing from root or `/docs`, not an arbitrary `/website` folder. This project uses the Actions workflow instead. See [GitHub’s publishing-source documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+Use GitHub Actions as the Pages source. The protected deployment environment accepts `main`; publish reviewed changes there. After deployment, verify the live model, scenario comparison, threshold endpoints, chart switching and narrow layout. Record the final deployment and browser checks in the reproduction report.

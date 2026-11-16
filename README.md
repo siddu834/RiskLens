@@ -1,8 +1,8 @@
-# RiskLens — Credit Default Risk Analysis
+# RiskLens â€” Serious Delinquency Prediction & Evaluation
 
 A machine learning modeling and evaluation project that predicts the probability of a customer experiencing serious financial delinquency within two years.
 
-RiskLens compares logistic regression, random forest and XGBoost using development cross-validation, then evaluates a frozen calibrated model on a separate holdout. Its interactive website explains how thresholds trade missed serious delinquency against false alarms; this is a reproducible research study, not a deployed lending system.
+RiskLens compares logistic regression, random forest and XGBoost using development cross-validation, then evaluates a frozen calibrated model on a separate holdout. Its interactive website runs the frozen calibrated model on hypothetical inputs, compares scenarios, and explains the tradeoff between missed positives and false alarms. This is a reproducible historical-data study, not a validated lending system.
 
 ---
 
@@ -54,7 +54,7 @@ The reported model is the original frozen XGBoost configuration with isotonic pr
 | Recall | 0.4958 |
 | F1 Score | 0.4475 |
 
-The classification metrics use a threshold of **0.23**, selected for development out-of-fold F1 in the original experiment. The rerun optimum is 0.22; 0.23 is retained for the fixed-model test comparison. The alternative **0.09** threshold minimizes an illustrative cost of `50,000 × FN + 5,000 × FP`; it is not the reporting threshold or a validated lending policy.
+The classification metrics use a threshold of **0.23**, selected for development out-of-fold F1 in the original experiment. The rerun optimum is 0.22; 0.23 is retained for the fixed-model test comparison. The alternative **0.09** threshold minimizes an illustrative cost of `50,000 Ã— FN + 5,000 Ã— FP`; it is not the reporting threshold or a validated lending policy.
 
 **Metric definition:** the reported PR-AUC is scikit-learn **average precision**. The numbers above come from the 12 November 2026 rerun of the original fixed final-model configuration. The original recorded results are preserved in `results/original_final_test_metrics.json`. Small differences remain between runs; see [the reproduction report](docs/reproduction_report.md). No test-driven parameter or threshold changes were made.
 
@@ -62,7 +62,7 @@ The locked test set was reserved for final evaluation rather than model tuning.
 
 ## What the results support
 
-Development average precision was 0.3828 for balanced logistic regression, 0.3863 for random forest, and 0.4013 for the rerun XGBoost search winner: an absolute gain of 0.0185 over logistic regression. These selection-influenced CV scores are not a significance test. Isotonic calibration improved the original fixed XGBoost model’s OOF Brier score from 0.13948 to 0.04906. Its separate final test average precision was 0.4045. A calibrated logistic model is a worthwhile interpretable follow-up, but was not evaluated here. At threshold 0.23 the final model misses 1,011 positive cases and produces 1,443 false alarms, so strong accuracy alone would obscure important errors.
+Development average precision was 0.3828 for balanced logistic regression, 0.3863 for random forest, and 0.4013 for the rerun XGBoost search winner: an absolute gain of 0.0185 over logistic regression. These selection-influenced CV scores are not a significance test. Isotonic calibration improved the original fixed XGBoost modelâ€™s OOF Brier score from 0.13948 to 0.04906. Its separate final test average precision was 0.4045. A calibrated logistic model is a worthwhile interpretable follow-up, but was not evaluated here. At threshold 0.23 the final model misses 1,011 positive cases and produces 1,443 false alarms, so strong accuracy alone would obscure important errors.
 
 ## Explainability
 
@@ -75,9 +75,11 @@ The analysis includes:
 
 ## Interactive Website
 
-[GitHub Pages address](https://siddu834.github.io/RiskLens/) — deployment pending; this is the intended address, not a verified live demo. See [deployment and phase checkpoints](docs/phase12_14_checklist.md).
+[Live GitHub Pages website](https://siddu834.github.io/RiskLens/) Â· [ES335 rubric coverage](docs/es335_rubric.md) Â· [Viva preparation](docs/viva_guide.md).
 
-The project includes a static interactive website for exploring credit-risk evaluation and classification thresholds. The slider reads precomputed **development out-of-fold** metrics; it does not score new customers. Final-test results are labeled separately.
+The static website includes a **real input-based prediction lab**: all ten features, fictional presets, missing-value handling, and a saved-scenario comparison. Five exported XGBoost members with their own preprocessing and isotonic maps run entirely in JavaScript; inputs are neither transmitted nor stored. The separate threshold explorer reads **development out-of-fold** metrics and lets visitors change illustrative error costs. ROC, precisionâ€“recall and calibration charts explain the evaluation. Final-test results are labeled separately.
+
+Browser probabilities match Python within 0.00002 (0.002 percentage points) over 200 synthetic cases and all 30,000 held-out rows. All held-out classifications at 0.23 agree. Small differences arise from float32 arithmetic and interpolation; displayed probabilities use one decimal percentage point.
 
 To run it locally from the project root:
 
@@ -112,8 +114,8 @@ Create `data/` and add the two source files described above. Open notebooks in J
 | Notebook | Purpose / outputs |
 |---|---|
 | 00 | Deterministic stratified split; `data/dev.csv`, `data/test.csv` |
-| 01–02 | Development-only EDA and preprocessing checks |
-| 03–04 | Baselines, imbalance experiments and 20-trial XGBoost search |
+| 01â€“02 | Development-only EDA and preprocessing checks |
+| 03â€“04 | Baselines, imbalance experiments and 20-trial XGBoost search |
 | 05 | Calibration comparisons and out-of-fold calibration figure |
 | 06 | Development out-of-fold predictions and website JSON exports |
 | 07 | Fixed final-test evaluation, computed metric JSON, error records |
@@ -132,7 +134,18 @@ python scripts/audit_data.py
 
 Executed notebooks and timings are saved under `.runs/` (excluded from Git). To check only the fixed final evaluation after preparing the split, use `python scripts/reproduce.py --notebooks 00 02 07`. Full execution overwrites generated metrics and figures; retain previous results before comparing runs.
 
-**Verification scope:** On 15 November 2026, notebooks 00, 02 and 07 reproduced all numeric final metrics within `1e-8` from a clean source copy using the previously validated environment. A separate fresh installation was attempted but package-host network failures prevented completion. Windows also blocked the local clone helper. The full fresh-clone/fresh-environment checkpoint is therefore still open; see [the phase checklist](docs/phase12_14_checklist.md).
+**Verification scope (16 November 2026):** A clean public GitHub clone and a newly installed Python 3.13 environment successfully rebuilt the frozen final ensemble using `scripts/export_browser_model.py`. ROC-AUC, average precision and Brier score matched the saved reference exactly. The dependency check and seven regression tests passed. All nine notebooks previously completed in the validated environment; the fresh-environment runner subsequently completed notebooks 00, 02 and 07 after local networking became available. The original startup stall is resolved. A second full hyperparameter-search run in the fresh environment is not claimed. The standalone exporter also independently verifies the final model. See [the reproduction report](docs/reproduction_report.md).
+
+To reproduce the prediction lab and aggregate error audit directly, without launching a notebook kernel:
+
+```bash
+python scripts/export_browser_model.py
+node tests/test_browser.cjs
+node tests/test_browser.cjs .runs/browser_test_private.json
+python scripts/build_site.py
+```
+
+The exporter creates the seed-42 split from the source CSV, fits only on development data, checks frozen test metrics, and writes `website/data/model.json`, its 15 small tree parts under `website/data/model/`, `evidence.json`, and synthetic test fixtures. Actual row-level parity inputs stay under ignored `.runs/`; never publish them. Node.js 22 or newer is needed only for the JavaScript parity test, not to serve the static website.
 
 ## Automated Checks
 
@@ -141,6 +154,7 @@ The lightweight checks do not require the private/local dataset or a model-train
 ```bash
 python -m pip install -r requirements-checks.txt
 python -m pytest -q
+node tests/test_browser.cjs
 python scripts/build_site.py
 ```
 
@@ -152,37 +166,37 @@ The Pages workflow publishes the generated `site/` directory, including figures.
 
 ```text
 RiskLens/
-│
-├── data/
-│
-├── notebooks/
-│   ├── 00_lock_split.ipynb
-│   ├── 01_eda.ipynb
-│   ├── 02_preprocessing_check.ipynb
-│   ├── 03_baselines.ipynb
-│   ├── 04_models.ipynb
-│   ├── 05_calibration.ipynb
-│   ├── 06_thresholds.ipynb
-│   ├── 07_final_test.ipynb
-│   └── 08_errors_shap.ipynb
-│
-├── src/
-│   ├── preprocessing.py
-│   └── evaluation.py
-│
-├── figures/
-│
-├── results/
-│
-├── website/
-│   ├── data/
-│   ├── index.html
-│   ├── styles.css
-│   └── app.js
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
+â”‚
+â”œâ”€â”€ data/
+â”‚
+â”œâ”€â”€ notebooks/
+â”‚   â”œâ”€â”€ 00_lock_split.ipynb
+â”‚   â”œâ”€â”€ 01_eda.ipynb
+â”‚   â”œâ”€â”€ 02_preprocessing_check.ipynb
+â”‚   â”œâ”€â”€ 03_baselines.ipynb
+â”‚   â”œâ”€â”€ 04_models.ipynb
+â”‚   â”œâ”€â”€ 05_calibration.ipynb
+â”‚   â”œâ”€â”€ 06_thresholds.ipynb
+â”‚   â”œâ”€â”€ 07_final_test.ipynb
+â”‚   â””â”€â”€ 08_errors_shap.ipynb
+â”‚
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ preprocessing.py
+â”‚   â””â”€â”€ evaluation.py
+â”‚
+â”œâ”€â”€ figures/
+â”‚
+â”œâ”€â”€ results/
+â”‚
+â”œâ”€â”€ website/
+â”‚   â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ index.html
+â”‚   â”œâ”€â”€ styles.css
+â”‚   â””â”€â”€ app.js
+â”‚
+â”œâ”€â”€ requirements.txt
+â”œâ”€â”€ README.md
+â””â”€â”€ .gitignore
 ```
 
 ## Technologies Used
@@ -210,7 +224,8 @@ RiskLens/
 - Hyperparameter selection and development score reporting reuse folds; development scores are selection-influenced. The held-out test is the primary generalization estimate.
 - The random split does not establish performance on future periods or new lending populations. The source has 609 repeated full rows; 173 holdout rows have feature profiles also present in development data. The nonmatching test subset gives ROC-AUC 0.8690 and average precision 0.4040. Identical profiles do not prove shared borrower identity. See `results/data_audit.json`.
 - Preliminary training-set calibration plots are diagnostic only; model comparisons should use out-of-fold results.
-- Error means use the first 20 examples per category, and the SHAP summary uses the first 1,000 development rows; these are illustrative samples.
+- The website error audit now summarizes all 30,000 test records. The older SHAP examples and first-1,000-development-row SHAP summary remain illustrative and explain a separate uncalibrated model.
+- A 300-resample percentile bootstrap gives a conditional test AP interval of 0.3809â€“0.4273. It does not include training, model-selection or population-shift uncertainty.
 - No real financial savings, production deployment, or complete fairness audit has been demonstrated.
 
 ## Future Improvements
@@ -222,7 +237,7 @@ RiskLens/
 
 ## Maintenance and Ownership
 
-AI assistance, including OpenAI Codex for maintenance, was used for concepts, debugging, experiment execution, tests, website implementation and documentation. The original project’s complete AI-tool history has not been independently verified. The author should verify the experiments and be able to explain the implementation. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
+AI assistance, including OpenAI Codex for maintenance, was used for concepts, debugging, experiment execution, tests, website implementation and documentation. The browser model export, synthetic parity fixtures, full error summaries, bootstrap interval and redesigned website also used Codex assistance. The original projectâ€™s complete AI-tool history has not been independently verified. The author should verify the experiments and be able to explain the implementation. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
 
 ## Author
 
@@ -232,5 +247,11 @@ GitHub: https://github.com/siddu834
 
 ---
 
-*RiskLens — Exploring credit risk through machine learning and explainable AI.*
+*RiskLens â€” Exploring credit risk through machine learning and explainable AI.*
 
+
+## Sources and course submission
+
+Data: [Give Me Some Credit](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Library references: [scikit-learn](https://scikit-learn.org/stable/), [XGBoost](https://xgboost.readthedocs.io/), [imbalanced-learn](https://imbalanced-learn.org/stable/), and [SHAP](https://shap.readthedocs.io/). The browser evaluator is a project implementation of exported tree traversal, original preprocessing and isotonic interpolation.
+
+For ES335, submit the live GitHub Pages URL and this source-repository URL through the course portal. The supplied course PDFs specify 17 November 2026, 11:59 PM IST. Submission itself has not been performed by this tooling. Individual contribution details and exact alignment with the original proposal await the studentsâ€™ confirmation; see the viva guide.

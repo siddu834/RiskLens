@@ -43,6 +43,12 @@ def build():
         },
         'calibration.json': json.loads((data / 'calibration_curve.json').read_text()),
     }
+    charts = {'calibration': exports['calibration.json']}
+    for name in ['roc', 'pr']:
+        rows = exports['roc_pr.json'][name]
+        indices = sorted({round(i * (len(rows)-1) / 499) for i in range(500)})
+        charts[name] = [rows[i] for i in indices]
+    exports['chart_data.json'] = charts
     for filename, value in exports.items():
         serialized = json.dumps(value, separators=(',', ':'), allow_nan=False) + '\n'
         (data / filename).write_text(serialized, encoding='utf-8')
@@ -62,11 +68,11 @@ def build():
     if replacements != 1:
         raise ValueError('Expected exactly one final-test summary placeholder')
     index.write_text(html, encoding='utf-8')
-    for path in (destination / 'data').glob('*.json'):
+    for path in (destination / 'data').rglob('*.json'):
         value = json.loads(path.read_text(encoding='utf-8'), parse_constant=reject_constant)
         compact = json.dumps(value, separators=(',', ':'), allow_nan=False) + '\n'
         path.write_text(compact, encoding='utf-8')
-        (data / path.name).write_text(compact, encoding='utf-8')
+        (data / path.relative_to(destination / 'data')).write_text(compact, encoding='utf-8')
     assets = Assets()
     assets.feed((destination / 'index.html').read_text(encoding='utf-8'))
     for relative in assets.paths:

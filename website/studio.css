@@ -84,10 +84,12 @@ main a:focus-visible,main button:focus-visible,.topbar a:focus-visible {
 .brand-group { gap:.55rem; }
 .signature { background:#c9f789; border-radius:12px 4px; padding:1px 4px; }
 .signature button { position:relative; width:24px; padding:0; border:0; background:transparent; color:#142333; cursor:pointer; }
-.signature svg { display:block; width:100%; }
+.signature svg { display:block; width:100%; border-radius:6px; pointer-events:none; }
+.signature button:is(:hover,:focus) { z-index:2; }
+.signature button:is(:hover,:focus) svg { background:#163047; color:#ddffaa; box-shadow:0 4px 8px #0006; }
 @media (prefers-reduced-motion:no-preference) {
-  .signature svg { transition:transform .22s cubic-bezier(.2,1.6,.4,1); }
-  .signature button:is(:hover,:focus-visible) svg { transform:translateY(-3px) scale(1.17); }
+  .signature svg { transition:transform .24s cubic-bezier(.2,1.5,.4,1); }
+  .signature button:is(:hover,:focus) svg { transform:translateY(-8px) scale(1.24); }
 }
 .signature .name-tip { display:none; position:absolute; top:100%; left:0; z-index:50; background:#172c40; color:white; padding:.5rem .75rem; border-radius:6px; font:600 .8rem/1.4 system-ui; white-space:nowrap; }
 .signature button:hover .name-tip,.signature button:focus .name-tip { display:block; }

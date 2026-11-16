@@ -268,7 +268,7 @@ footer {
 
 }
 
-/* STEP 12.5 — FINAL RESPONSIVE IMPROVEMENTS */
+/* STEP 12.5 â€” FINAL RESPONSIVE IMPROVEMENTS */
 
 /* Prevent content from overflowing */
 img {
@@ -336,3 +336,14 @@ input:focus-visible {
         padding: 20px 12px;
     }
 }
+
+/* Readable links, tables and keyboard navigation. */
+a { color: #93c5fd; text-underline-offset: .2em; }
+.skip-link { position: absolute; left: 1rem; top: -5rem; background: #0f172a; padding: .7rem; z-index: 10; }
+.skip-link:focus { top: 1rem; }
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: .7rem; border-bottom: 1px solid #475569; }
+caption { text-align: left; color: #cbd5e1; }
+input[type=range] { min-height: 32px; }
+@media (prefers-reduced-motion: reduce) { .card, .metric { transition: none; transform: none; } }

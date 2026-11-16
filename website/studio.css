@@ -80,3 +80,11 @@ main a:focus-visible,main button:focus-visible,.topbar a:focus-visible {
   main > section { margin-bottom:1rem; scroll-margin-top:4rem; }
 }
 @media(max-width:760px) { .studio { display:grid; grid-template-columns:minmax(0,1fr); } }
+.brand-group,.signature { display:inline-flex; align-items:center; }
+.brand-group { gap:.55rem; }
+.signature { background:#c9f789; border-radius:12px 4px; padding:1px 4px; }
+.signature button { position:relative; width:24px; padding:0; border:0; background:transparent; color:#142333; cursor:pointer; }
+.signature svg { display:block; width:100%; }
+.signature .name-tip { display:none; position:absolute; top:100%; left:0; z-index:50; background:#172c40; color:white; padding:.5rem .75rem; border-radius:6px; font:600 .8rem/1.4 system-ui; white-space:nowrap; }
+.signature button:hover .name-tip,.signature button:focus .name-tip { display:block; }
+footer .signature .name-tip { top:auto; bottom:100%; }

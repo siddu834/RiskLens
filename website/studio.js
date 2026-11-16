@@ -43,15 +43,6 @@ const links = rooms.map(([id, label]) => {
 });
 document.querySelector('.studio').id = 'overview';
 document.querySelector('main').prepend(navigation);
-const credit = 'by Deekshith Reddy & Surya Siddardha Reddy';
-for (const [, , selectors] of rooms) {
-  const finalSection = document.querySelector(selectors[selectors.length - 1]);
-  const line = document.createElement('p');
-  line.className = 'view-credit';
-  line.textContent = credit;
-  finalSection.append(line);
-}
-document.querySelector('footer .brand').innerHTML = '<b class="brand-mark" aria-hidden="true">SD</b> RiskLens';
 function openRoom() {
   const target = document.getElementById(location.hash.slice(1));
   const active = rooms.findIndex(([, , selectors]) =>

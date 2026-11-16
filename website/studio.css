@@ -27,6 +27,10 @@ main { display:grid; grid-template-columns:13rem minmax(0,1fr); align-items:star
 main > section,main > footer { grid-column:2; min-width:0; }
 main > section[hidden] { display:none; }
 main > .section { background:#f4f6f9; border-radius:1rem; padding:clamp(1rem,3vw,3rem); margin:0; }
+main > .conclusion { background:linear-gradient(135deg,#132c38,#1c3e45); color:#f8fcf5; border:1px solid #417075; }
+main > .conclusion .index { color:#c9f789; }
+main > .conclusion h2 { color:#f8fcf5; }
+main > .conclusion p { color:#e3f0ec; }
 main > .studio { background:radial-gradient(ellipse at 80% 10%,#234c53,transparent 62%),#16283a; border:1px solid #45616e; border-radius:1rem; }
 .studio h1,.section h2 { font-family:Manrope,system-ui,sans-serif; font-weight:800; }
 .studio h1 em,.studio .text-link,.studio .eyebrow { color:#c9f789; }

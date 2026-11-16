@@ -25,3 +25,7 @@ The project now has verified rerun results, repaired notebooks, explicit evaluat
 GitHub write access was confirmed on 16 November 2026 and the review branch was created. Live Pages and remote CI remain unverified until the prepared changes are published and deployed.
 
 Further experiments should use development data only: compare weighted/unweighted XGBoost, sigmoid/isotonic calibration, uncertainty intervals, and representative error slices. For an ML engineering application, add a saved final pipeline with input validation and a tested inference interface. None of these extensions is claimed as complete.
+
+## ES335 redesign — 16 November 2026
+
+Replaced the generic dark report with a responsive research site and real browser-side prediction lab. Exported the frozen five-model XGBoost/isotonic ensemble with all preprocessing; validated 200 synthetic and 30,000 test predictions against Python. Added fictional presets, missing-value handling, saved-scenario comparisons, cost-sensitive threshold exploration, ROC/PR/calibration chart selection, full test-error summaries and a conditional AP bootstrap interval. Added rubric mapping, source citations, updated reproduction evidence and viva questions. No new model or threshold was chosen using test outcomes. Student contributions and original-proposal alignment remain for the students to confirm.

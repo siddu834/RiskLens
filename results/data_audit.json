@@ -1,0 +1,19 @@
+{
+  "source_sha256": "1bd46da486a5708c58c7b01a034fae2a13b327f6f7b62ea7ba4fe3b5824b24ac",
+  "rows": 150000,
+  "features": 10,
+  "positive_rows": 10026,
+  "duplicate_rows_including_label": 609,
+  "duplicate_feature_rows": 646,
+  "development_rows": 120000,
+  "test_rows": 30000,
+  "test_rows_matching_development_including_label": 163,
+  "test_rows_matching_development_features": 173,
+  "interpretation": "Identical feature profiles are not proof of borrower identity. The original random split is retained for reproduction; the additional subset analysis is not a replacement untouched test set.",
+  "nonmatching_test_subset": {
+    "rows": 29827,
+    "roc_auc": 0.8690184406242876,
+    "average_precision": 0.4039964823256958,
+    "brier_score": 0.04860339225560087
+  }
+}

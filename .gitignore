@@ -24,3 +24,8 @@ data/*.xls
 # Exclude Python environments
 venv/
 .venv/
+
+# Generated website bundle and test cache
+site/
+.pytest_cache/
+.runs/

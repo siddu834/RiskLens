@@ -1,8 +1,8 @@
 # RiskLens — Credit Default Risk Analysis
 
-An end-to-end machine learning project that predicts the probability of a customer experiencing serious financial delinquency within two years.
+A machine learning modeling and evaluation project that predicts the probability of a customer experiencing serious financial delinquency within two years.
 
-RiskLens explores data preprocessing, exploratory data analysis, model comparison, hyperparameter tuning, probability calibration, threshold optimization, error analysis, and explainable AI.
+RiskLens compares logistic regression, random forest and XGBoost using development cross-validation, then evaluates a frozen calibrated model on a separate holdout. Its interactive website explains how thresholds trade missed serious delinquency against false alarms; this is a reproducible research study, not a deployed lending system.
 
 ---
 
@@ -20,11 +20,13 @@ The project uses the Kaggle **Give Me Some Credit** dataset.
 
 - Target variable: `SeriousDlqin2yrs`
 - Development samples: 120,000
-- Locked test samples: 30,000
+- Held-out test samples: 30,000
+- Split: 80/20, stratified on the target, `RANDOM_SEED=42`
+- Shuffled five-fold CV, randomized search and stochastic models use seed 42. The inner calibration `cv=5` is deterministic and unshuffled; it has no random seed to set.
 - Input features: 10
 - Default rate: approximately 6.68%
 
-The dataset is not included in this repository. Place the required CSV files in the `data/` directory before running the notebooks.
+The dataset is not included in this repository. Obtain `cs-training.csv` and `Data Dictionary.xls` from the [Give Me Some Credit competition](https://www.kaggle.com/competitions/GiveMeSomeCredit/data), subject to its access terms. Put both files in a new `data/` directory. `dev.csv` and `test.csv` are generated locally by notebook 00; the latter is this project's holdout, not Kaggle's unlabeled competition test file.
 
 ## Machine Learning Workflow
 
@@ -41,24 +43,30 @@ The dataset is not included in this repository. Place the required CSV files in 
 
 ## Final Model Performance
 
-The selected model is a tuned XGBoost classifier with isotonic probability calibration.
+The reported model is the original frozen XGBoost configuration with isotonic probability calibration. The rerun search selected a different development-CV winner; it is reported separately and was not substituted into the final evaluation.
 
 | Metric | Test Result |
 |---|---:|
-| ROC-AUC | 0.8691 |
-| PR-AUC | 0.4043 |
+| ROC-AUC | 0.8694 |
+| PR-AUC | 0.4045 |
 | Brier Score | 0.0487 |
-| Precision | 0.4033 |
-| Recall | 0.4938 |
-| F1 Score | 0.4439 |
+| Precision | 0.4079 |
+| Recall | 0.4958 |
+| F1 Score | 0.4475 |
 
-The classification metrics use a threshold of **0.23**, selected using development data.
+The classification metrics use a threshold of **0.23**, selected for development out-of-fold F1 in the original experiment. The rerun optimum is 0.22; 0.23 is retained for the fixed-model test comparison. The alternative **0.09** threshold minimizes an illustrative cost of `50,000 × FN + 5,000 × FP`; it is not the reporting threshold or a validated lending policy.
+
+**Metric definition:** the reported PR-AUC is scikit-learn **average precision**. The numbers above come from the 12 November 2026 rerun of the original fixed final-model configuration. The original recorded results are preserved in `results/original_final_test_metrics.json`. Small differences remain between runs; see [the reproduction report](docs/reproduction_report.md). No test-driven parameter or threshold changes were made.
 
 The locked test set was reserved for final evaluation rather than model tuning.
 
+## What the results support
+
+Development average precision was 0.3828 for balanced logistic regression, 0.3863 for random forest, and 0.4013 for the rerun XGBoost search winner: an absolute gain of 0.0185 over logistic regression. These selection-influenced CV scores are not a significance test. Isotonic calibration improved the original fixed XGBoost model’s OOF Brier score from 0.13948 to 0.04906. Its separate final test average precision was 0.4045. A calibrated logistic model is a worthwhile interpretable follow-up, but was not evaluated here. At threshold 0.23 the final model misses 1,011 positive cases and produces 1,443 false alarms, so strong accuracy alone would obscure important errors.
+
 ## Explainability
 
-SHAP (SHapley Additive exPlanations) was used to investigate feature contributions to model predictions.
+SHAP (SHapley Additive exPlanations) was used to investigate a separately fitted **uncalibrated XGBoost model**. Its plots explain raw margin (log-odds), not the final calibrated ensemble probability. False-positive and false-negative labels identify errors of the final classifier; the separately explained model may classify those examples differently.
 
 The analysis includes:
 - Global feature importance.
@@ -67,19 +75,78 @@ The analysis includes:
 
 ## Interactive Website
 
-The project includes an interactive website for exploring credit-risk evaluation and classification threshold behaviour.
+[GitHub Pages address](https://siddu834.github.io/RiskLens/) — deployment pending; this is the intended address, not a verified live demo. See [deployment and phase checkpoints](docs/phase12_14_checklist.md).
+
+The project includes a static interactive website for exploring credit-risk evaluation and classification thresholds. The slider reads precomputed **development out-of-fold** metrics; it does not score new customers. Final-test results are labeled separately.
 
 To run it locally from the project root:
 
 ```bash
-python -m http.server 8000
+python scripts/build_site.py
+python -m http.server 8000 --directory site
 ```
 
 Then open:
 
 ```text
-http://localhost:8000/website/
+http://localhost:8000/
 ```
+
+## Reproduce the Analysis
+
+Use Python 3.13. From the repository root:
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment with `.venv\Scripts\Activate.ps1` on Windows PowerShell or `source .venv/bin/activate` on macOS/Linux, then:
+
+```bash
+python -m pip install -r requirements.txt
+python -m jupyterlab
+```
+
+Create `data/` and add the two source files described above. Open notebooks in JupyterLab and execute them in filename order, **00 through 08**, each with its working directory set to `notebooks/`. Restart the kernel and run all cells rather than relying on variables from an earlier session. Notebook 01 uses `xlrd` to read the `.xls` dictionary.
+
+| Notebook | Purpose / outputs |
+|---|---|
+| 00 | Deterministic stratified split; `data/dev.csv`, `data/test.csv` |
+| 01–02 | Development-only EDA and preprocessing checks |
+| 03–04 | Baselines, imbalance experiments and 20-trial XGBoost search |
+| 05 | Calibration comparisons and out-of-fold calibration figure |
+| 06 | Development out-of-fold predictions and website JSON exports |
+| 07 | Fixed final-test evaluation, computed metric JSON, error records |
+| 08 | Error inspection and separately fitted base-model SHAP figures |
+
+Training time depends on hardware. The search performs 100 candidate-fold fits plus refitting; calibrated out-of-fold experiments add many fits. The previous all-notebook run took about 19 minutes of notebook execution on the validation machine; this is an observation, not a hardware-independent runtime guarantee. Model and CV parallelism defaults to two workers; set `RISKLENS_N_JOBS` to a positive integer before starting Jupyter to change it. Avoid running several training notebooks concurrently. On memory-constrained machines, also set `OPENBLAS_NUM_THREADS=1` and `OMP_NUM_THREADS=2` before starting Python.
+
+The notebooks export the baseline and model comparison CSVs. Markdown interpretations still need review when experiments change. Do not choose new models or thresholds based on the held-out test results.
+
+For unattended execution with the active Python environment:
+
+```bash
+python scripts/reproduce.py
+python scripts/audit_data.py
+```
+
+Executed notebooks and timings are saved under `.runs/` (excluded from Git). To check only the fixed final evaluation after preparing the split, use `python scripts/reproduce.py --notebooks 00 02 07`. Full execution overwrites generated metrics and figures; retain previous results before comparing runs.
+
+**Verification scope:** On 15 November 2026, notebooks 00, 02 and 07 reproduced all numeric final metrics within `1e-8` from a clean source copy using the previously validated environment. A separate fresh installation was attempted but package-host network failures prevented completion. Windows also blocked the local clone helper. The full fresh-clone/fresh-environment checkpoint is therefore still open; see [the phase checklist](docs/phase12_14_checklist.md).
+
+## Automated Checks
+
+The lightweight checks do not require the private/local dataset or a model-training run:
+
+```bash
+python -m pip install -r requirements-checks.txt
+python -m pytest -q
+python scripts/build_site.py
+```
+
+Checks cover sentinel handling, missing values, training-only capping, prediction shape, metric arithmetic, strict JSON, and packaged website assets. GitHub Actions runs these checks on pushes and pull requests. They are smoke/regression checks, not proof of predictive quality.
+
+The Pages workflow publishes the generated `site/` directory, including figures. Enable GitHub Pages with **GitHub Actions** as its source in repository settings. Verify a successful deployment before adding a live demo URL to a resume.
 
 ## Project Structure
 
@@ -138,12 +205,24 @@ RiskLens/
 - Classification thresholds require real-world cost considerations.
 - Group fairness has not been fully audited.
 
+## Evaluation Boundaries
+
+- Hyperparameter selection and development score reporting reuse folds; development scores are selection-influenced. The held-out test is the primary generalization estimate.
+- The random split does not establish performance on future periods or new lending populations. The source has 609 repeated full rows; 173 holdout rows have feature profiles also present in development data. The nonmatching test subset gives ROC-AUC 0.8690 and average precision 0.4040. Identical profiles do not prove shared borrower identity. See `results/data_audit.json`.
+- Preliminary training-set calibration plots are diagnostic only; model comparisons should use out-of-fold results.
+- Error means use the first 20 examples per category, and the SHAP summary uses the first 1,000 development rows; these are illustrative samples.
+- No real financial savings, production deployment, or complete fairness audit has been demonstrated.
+
 ## Future Improvements
 
-- Build a more complete interactive prediction interface.
+- Evaluate calibrated logistic regression using the same development protocol.
 - Conduct a detailed fairness evaluation.
 - Explore additional machine learning models.
-- Improve the website's deployment and accessibility.
+- Validate on later time periods and borrower-disjoint data when identifiers become available.
+
+## Maintenance and Ownership
+
+AI assistance, including OpenAI Codex for maintenance, was used for concepts, debugging, experiment execution, tests, website implementation and documentation. The original project’s complete AI-tool history has not been independently verified. The author should verify the experiments and be able to explain the implementation. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
 
 ## Author
 

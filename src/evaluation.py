@@ -50,7 +50,7 @@ def plot_roc_pr(y_true, y_prob, title_prefix=""):
 
 
 from sklearn.model_selection import StratifiedKFold, cross_validate
-from src.config import RANDOM_SEED, N_FOLDS
+from src.config import RANDOM_SEED, N_FOLDS, N_JOBS
 
 def run_cv(pipeline, X, y):
 
@@ -72,7 +72,7 @@ def run_cv(pipeline, X, y):
         y,
         cv=cv,
         scoring=scoring,
-        n_jobs=-1,
+        n_jobs=N_JOBS,
         return_train_score=False
     )
 

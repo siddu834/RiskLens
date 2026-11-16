@@ -11,7 +11,7 @@ def reject_constant(value):
 
 
 def test_website_data_is_strict_json():
-    for path in (ROOT / 'website/data').glob('*.json'):
+    for path in (ROOT / 'website/data').rglob('*.json'):
         json.loads(path.read_text(encoding='utf-8'), parse_constant=reject_constant)
 
 

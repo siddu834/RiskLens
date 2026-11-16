@@ -239,9 +239,17 @@ RiskLens/
 
 AI assistance, including OpenAI Codex for maintenance, was used for concepts, debugging, experiment execution, tests, website implementation and documentation. The browser model export, synthetic parity fixtures, full error summaries, bootstrap interval and redesigned website also used Codex assistance. The original project's complete AI-tool history has not been independently verified. The author should verify the experiments and be able to explain the implementation. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
 
-## Author
+## Team contributions
 
-**Surya Siddardha Reddy Geeda**
+- **G Surya Siddardha Reddy:** Led data access and auditing, preprocessing, baseline and model comparisons, and probability calibration.
+- **Marimireddy Deekshith Reddy:** Led evaluation design, threshold and error analysis, website interactions, reproducibility checks, and deployment.
+- **Both students:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
+
+OpenAI Codex assisted with code corrections, experiments, model export, website implementation, tests, and documentation as disclosed above. Each student is responsible for reviewing and explaining the work attributed to them.
+
+## Authors
+
+**G Surya Siddardha Reddy** and **Marimireddy Deekshith Reddy**
 
 GitHub: https://github.com/siddu834
 

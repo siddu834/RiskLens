@@ -237,15 +237,13 @@ RiskLens/
 
 ## Maintenance and Ownership
 
-We used AI tools only as a support resource for brainstorming, debugging, editing, and checking presentation. We designed the study, made the modeling decisions, ran and interpreted the experiments, and are responsible for the final code, results, and conclusions.
+We used OpenAI Codex for coding, experiment execution, debugging, visualization, and editing. We are responsible for the submitted work and its conclusions.
 
 ## Team contributions
 
 - **G Surya Siddardha Reddy:** Led data access and auditing, preprocessing, baseline and model comparisons, and probability calibration.
 - **Marimireddy Deekshith Reddy:** Led evaluation design, threshold and error analysis, website interactions, reproducibility checks, and deployment.
 - **Both:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
-
-AI tools were used as a support resource during drafting, debugging, and presentation work. We made the project decisions and are responsible for the final results.
 
 ## Authors
 

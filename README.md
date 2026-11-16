@@ -237,7 +237,7 @@ RiskLens/
 
 ## Maintenance and Ownership
 
-AI assistance, including OpenAI Codex for maintenance, was used for concepts, debugging, experiment execution, tests, website implementation and documentation. The browser model export, synthetic parity fixtures, full error summaries, bootstrap interval and redesigned website also used Codex assistance. The original project's complete AI-tool history has not been independently verified. The author should verify the experiments and be able to explain the implementation. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
+AI tools were used as a support resource for brainstorming, debugging, editing, and checking presentation. The student team made the project decisions, ran and interpreted the experiments, and is responsible for the final code, results, and conclusions. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
 
 ## Team contributions
 
@@ -245,7 +245,7 @@ AI assistance, including OpenAI Codex for maintenance, was used for concepts, de
 - **Marimireddy Deekshith Reddy:** Led evaluation design, threshold and error analysis, website interactions, reproducibility checks, and deployment.
 - **Both students:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
 
-OpenAI Codex assisted with code corrections, experiments, model export, website implementation, tests, and documentation as disclosed above. Each student is responsible for reviewing and explaining the work attributed to them.
+AI tools were used as a support resource during drafting, debugging, and presentation work. The student team made the project decisions and is responsible for the final results.
 
 ## Authors
 

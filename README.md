@@ -237,7 +237,7 @@ RiskLens/
 
 ## Maintenance and Ownership
 
-AI tools were used as a support resource for brainstorming, debugging, editing, and checking presentation. The student team made the project decisions, ran and interpreted the experiments, and is responsible for the final code, results, and conclusions. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
+We used AI tools only as a support resource for brainstorming, debugging, editing, and checking presentation. We designed the study, made the modeling decisions, ran and interpreted the experiments, and are responsible for the final code, results, and conclusions. See [the improvement log](docs/improvement_log.md) for changes, validation scope, and remaining work.
 
 ## Team contributions
 

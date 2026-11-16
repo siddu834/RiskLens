@@ -75,7 +75,7 @@ The analysis includes:
 
 ## Interactive Website
 
-[Live GitHub Pages website](https://siddu834.github.io/RiskLens/) | [ES335 rubric coverage](docs/es335_rubric.md) | [Viva preparation](docs/viva_guide.md).
+[Live GitHub Pages website](https://siddu834.github.io/RiskLens/)
 
 The static website includes a **real input-based prediction lab**: all ten features, fictional presets, missing-value handling, and a saved-scenario comparison. Five exported XGBoost members with their own preprocessing and isotonic maps run entirely in JavaScript; inputs are neither transmitted nor stored. The separate threshold explorer reads **development out-of-fold** metrics and lets visitors change illustrative error costs. ROC, precision-recall and calibration charts explain the evaluation. Final-test results are labeled separately.
 
@@ -254,4 +254,3 @@ GitHub: https://github.com/siddu834
 
 Data: [Give Me Some Credit](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Library references: [scikit-learn](https://scikit-learn.org/stable/), [XGBoost](https://xgboost.readthedocs.io/), [imbalanced-learn](https://imbalanced-learn.org/stable/), and [SHAP](https://shap.readthedocs.io/). The browser evaluator is a project implementation of exported tree traversal, original preprocessing and isotonic interpolation.
 
-For ES335, submit the live GitHub Pages URL and this source-repository URL through the course portal. The supplied course PDFs specify 17 November 2026, 11:59 PM IST. Submission itself has not been performed by this tooling. Individual contribution details and exact alignment with the original proposal await the students' confirmation; see the viva guide.

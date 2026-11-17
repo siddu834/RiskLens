@@ -12,7 +12,7 @@ Credit risk assessment is an important problem in financial institutions. Identi
 
 RiskLens uses machine learning to estimate credit default risk and provides an interactive website to explore model performance and classification thresholds.
 
-**This project is intended as a decision-support tool, not an automated lending authority.**
+**This project studies historical prediction performance and error tradeoffs.**
 
 ## Dataset
 
@@ -56,13 +56,13 @@ The reported model is the original frozen XGBoost configuration with isotonic pr
 
 The classification metrics use a threshold of **0.23**, selected for development out-of-fold F1 in the original experiment. The rerun optimum is 0.22; 0.23 is retained for the fixed-model test comparison. The alternative **0.09** threshold minimizes an illustrative cost of `50,000 * FN + 5,000 * FP`; it is not the reporting threshold or a validated lending policy.
 
-**Metric definition:** the reported PR-AUC is scikit-learn **average precision**. The numbers above come from the 12 November 2026 rerun of the original fixed final-model configuration. The original recorded results are preserved in `results/original_final_test_metrics.json`. Small differences remain between runs; see [the reproduction report](docs/reproduction_report.md). No test-driven parameter or threshold changes were made.
+**Metric definition:** the reported PR-AUC is scikit-learn **average precision**. The numbers above describe a reproduction of the original fixed final-model configuration. The original recorded results are preserved in `results/original_final_test_metrics.json`. Small differences remain between runs; see [the reproduction report](docs/reproduction_report.md). No test-driven parameter or threshold changes were made.
 
 The locked test set was reserved for final evaluation rather than model tuning.
 
 ## What the results support
 
-Development average precision was 0.3828 for balanced logistic regression, 0.3863 for random forest, and 0.4013 for the rerun XGBoost search winner: an absolute gain of 0.0185 over logistic regression. These selection-influenced CV scores are not a significance test. Isotonic calibration improved the original fixed XGBoost model's OOF Brier score from 0.13948 to 0.04906. Its separate final test average precision was 0.4045. A calibrated logistic model is a worthwhile interpretable follow-up, but was not evaluated here. At threshold 0.23 the final model misses 1,011 positive cases and produces 1,443 false alarms, so strong accuracy alone would obscure important errors.
+Development average precision was 0.3828 for balanced logistic regression, 0.3863 for random forest, and 0.4013 for the rerun XGBoost search winner: an absolute gain of 0.0185 over logistic regression. These selection-influenced CV scores are not a significance test. Isotonic calibration improved the original fixed XGBoost model's OOF Brier score from 0.13948 to 0.04906. Its separate final test average precision was 0.4045. The subsequent paired development comparison evaluated isotonic-calibrated logistic regression (AP 0.37984, Brier 0.04983) against the fixed calibrated XGBoost model (AP 0.39907, Brier 0.04904). This follow-up used development predictions after the original final evaluation and did not select a replacement final model. At threshold 0.23 the final model misses 1,011 positive cases and produces 1,443 false alarms, so strong accuracy alone would obscure important errors.
 
 ## Explainability
 

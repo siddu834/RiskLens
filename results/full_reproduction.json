@@ -1,0 +1,79 @@
+{
+  "source_commit": "2911f5fb5c32df377c8fd115f680f370c973bce5",
+  "verification_date": "2026-11-17",
+  "environment": "Fresh Python 3.13 venv; pip install requirements.txt and requirements-checks.txt; pip check passed",
+  "raw_csv_sha256": "1bd46da486a5708c58c7b01a034fae2a13b327f6f7b62ea7ba4fe3b5824b24ac",
+  "notebook_runs": [
+    {
+      "notebook": "00_lock_split.ipynb",
+      "status": "passed",
+      "seconds": 37.07
+    },
+    {
+      "notebook": "01_eda.ipynb",
+      "status": "passed",
+      "seconds": 18.24
+    },
+    {
+      "notebook": "02_preprocessing_check.ipynb",
+      "status": "passed",
+      "seconds": 16.25
+    },
+    {
+      "notebook": "03_baselines.ipynb",
+      "status": "passed",
+      "seconds": 15.65
+    },
+    {
+      "notebook": "04_models.ipynb",
+      "status": "passed",
+      "seconds": 313.51
+    },
+    {
+      "notebook": "05_calibration.ipynb",
+      "status": "passed",
+      "seconds": 517.33
+    },
+    {
+      "notebook": "06_thresholds.ipynb",
+      "status": "passed",
+      "seconds": 58.86
+    },
+    {
+      "notebook": "07_final_test.ipynb",
+      "status": "passed",
+      "seconds": 25.57
+    },
+    {
+      "notebook": "08_errors_shap.ipynb",
+      "status": "passed",
+      "seconds": 25.84
+    }
+  ],
+  "notebook_cell_errors": 0,
+  "published_artifact_equality": {
+    "results/final_test_metrics.json": true,
+    "website/data/threshold_metrics.json": true,
+    "website/data/calibration_curve.json": true,
+    "website/data/summary_metrics.json": true,
+    "results/calibrated_uncertainty.json": true,
+    "results/data_audit.json": true,
+    "website/data/review_capacity.json": true,
+    "website/data/evidence.json": true
+  },
+  "cv_max_absolute_difference": 4.990510940605652e-07,
+  "cv_difference_explanation": "Previously rounded six-decimal export rows. Full precision values reproduced.",
+  "warnings": "Windows joblib resource-tracker cleanup KeyErrors appeared on process stderr. Notebook cells completed without error outputs; runner exit status was zero. Local Jupyter kernels also emitted a TCP transport warning.",
+  "followup_scripts": [
+    "compare_calibrated.py",
+    "audit_data.py",
+    "export_browser_model.py",
+    "build_site.py"
+  ],
+  "regression_tests_passed": 7,
+  "browser_parity": {
+    "cases": 200,
+    "max_probability_error": 1.0696479252336744e-05,
+    "classification_disagreements": 0
+  }
+}

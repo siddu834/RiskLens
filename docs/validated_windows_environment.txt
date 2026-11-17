@@ -1,8 +1,6 @@
-# Windows / Python 3.13 environment used for the 2026-11-12 rerun.
-# Platform-specific snapshot; use requirements.txt for normal setup.
 anyio==4.16.0
 argon2-cffi==25.1.0
-argon2-cffi-bindings==26.1.0
+argon2-cffi-bindings==26.2.0
 arrow==1.4.0
 asttokens==3.0.2
 async-lru==2.4.0
@@ -57,7 +55,7 @@ MarkupSafe==3.0.4
 matplotlib==3.11.2
 matplotlib-inline==0.2.2
 mistune==3.4.0
-narwhals==2.28.0
+narwhals==2.29.0
 nbclient==0.11.0
 nbconvert==7.17.2
 nbformat==5.11.1
@@ -93,12 +91,12 @@ rpds-py==2026.9.1
 scikit-learn==1.9.1
 scipy==1.18.1
 seaborn==0.13.2
-Send2Trash==2.1.0
+Send2Trash==2.2.0
 shap==0.54.1
 six==1.17.0
 sklearn-compat==0.1.6
 slicer==0.0.8
-soupsieve==4.1
+soupsieve==4.1.1
 stack-data==0.6.3
 terminado==0.18.1
 threadpoolctl==3.8.0

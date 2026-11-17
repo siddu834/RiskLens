@@ -1,5 +1,18 @@
 # RiskLens reproduction report
 
+## Complete fresh-clone verification - 17 November 2026
+
+A new HTTPS clone at commit `2911f5fb5c32df377c8fd115f680f370c973bce5` was tested in a newly created Python 3.13 environment. Dependencies were installed from the documented requirements files and `pip check` passed. Only the original labeled CSV and dictionary were copied into the data directory. The original computational notebook sources were executed through the shipped runner.
+
+All nine notebooks completed with zero cell error outputs, and the runner exited successfully. Total notebook execution time was 17.14 minutes. The frozen final metrics, all 101 threshold rows, calibration data and summary metrics matched the published JSON exactly after parsing. CV metrics differed by at most 0.0000005 because some old CSV entries were rounded to six decimals. The newly exported CSV retains full precision.
+
+The calibrated comparison, paired bootstrap, data audit and browser export were rerun in the same environment. The uncertainty intervals, review-budget counts, test evidence and data-audit JSON matched the published artifacts exactly. All seven regression tests passed. Browser parity passed for 200 profiles with maximum probability error 0.00001069648 and zero classification disagreements. The static site build passed.
+
+Detailed timings and comparisons are in [full_reproduction.json](../results/full_reproduction.json). The environment is recorded in [validated_windows_environment.txt](validated_windows_environment.txt). This full run supersedes the incomplete-run qualifications in the historical entries below.
+
+Windows joblib workers printed resource-tracker cleanup KeyErrors on stderr. These occurred outside notebook cell execution and did not prevent successful completion. Local Jupyter kernels also printed a TCP transport warning. The recorded verification distinguishes these warnings from computational failures.
+
+
 Date: 12 November 2026. Source data was downloaded from the user-provided folder; raw data and row-level predictions remain excluded from version control.
 
 ## Verified final-model evaluation
@@ -30,7 +43,7 @@ Matching profiles do not prove borrower identity. This subset is a diagnostic of
 
 ## Search and calibration
 
-The 20-trial rerun search selected depth 5, learning rate 0.03, minimum child weight 7, subsample 0.9 and column subsample 0.8 (development average precision 0.4012569). The original search selected different parameters. The original frozen configuration was retained in notebooks 05â€“08 and in the final test above. Search CV scores reuse selection folds and are not unbiased nested-CV estimates.
+The 20-trial rerun search selected depth 5, learning rate 0.03, minimum child weight 7, subsample 0.9 and column subsample 0.8 (development average precision 0.4012569). The original search selected different parameters. The original frozen configuration was retained in notebooks 05–08 and in the final test above. Search CV scores reuse selection folds and are not unbiased nested-CV estimates.
 
 Reproduced out-of-fold calibration Brier comparisons:
 
@@ -68,7 +81,7 @@ Seven lightweight regression tests and the environment dependency check passed b
 
 The environment snapshot is recorded separately. Model-serving, fairness certification and financial savings are not claimed.
 
-## Phase 13 clean-source check â€” 15 November 2026
+## Phase 13 clean-source check — 15 November 2026
 
 A clean source directory was extracted from a local Git snapshot of the prepared changes. Windows denied the local Git clone helper, so this does not verify a remote fresh clone. Only the two original data files were copied separately; no split files or fitted models were supplied.
 
@@ -76,7 +89,7 @@ Using the existing validated environment, the shipped runner completed notebooks
 
 The fresh-environment installation is a separate check; its result is recorded in the phase checklist. Local browser checks confirmed the slider, all five figures, keyboard input and a mobile viewport. GitHub access was subsequently restored; this historical blocker is resolved.
 
-## ES335 prediction-lab verification â€” 16 November 2026
+## ES335 prediction-lab verification — 16 November 2026
 
 - Clean HTTPS clone from public `main` at `45df8f3a0a6595a08fec5be54a357c889b74c083`.
 - New Python 3.13 environment: 116 dependencies installed from the pinned requirements plus test requirements using uv. `pip check`: no broken requirements.

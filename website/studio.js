@@ -43,6 +43,24 @@ const links = rooms.map(([id, label]) => {
 });
 document.querySelector('.studio').id = 'overview';
 document.querySelector('main').prepend(navigation);
+const topbar = document.querySelector('.topbar');
+topbar.style.position = 'sticky';
+topbar.style.top = '0';
+function updateNavigationOffsets() {
+  const headerHeight = topbar.offsetHeight;
+  const narrow = matchMedia('(max-width:1000px)').matches;
+  navigation.style.top = (headerHeight + (narrow ? 0 : 12)) + 'px';
+  const offset = headerHeight + (narrow ? navigation.offsetHeight : 0) + 12;
+  document.documentElement.style.scrollPaddingTop = offset + 'px';
+  document.querySelectorAll('main > section, #thresholds').forEach(section => {
+    section.style.scrollMarginTop = '0';
+  });
+  document.querySelector('.prediction-panel').style.top = offset + 'px';
+}
+const navigationResize = new ResizeObserver(updateNavigationOffsets);
+navigationResize.observe(topbar);
+navigationResize.observe(navigation);
+updateNavigationOffsets();
 function openRoom() {
   const target = document.getElementById(location.hash.slice(1));
   const active = rooms.findIndex(([, , selectors]) =>

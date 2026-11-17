@@ -134,15 +134,16 @@ for (const control of document.querySelectorAll(pianoControls)) {
         key.style.cssText = 'display:inline-block;font-style:inherit';
         const glyph = key.cloneNode();
         glyph.style.pointerEvents = 'none';
+        glyph.style.position = 'relative';
         glyph.textContent = char;
         key.append(glyph);
         key.addEventListener('pointerenter', event => {
           if (!hoverMotion.matches || event.pointerType === 'touch') return;
           for (const animation of glyph.getAnimations()) animation.cancel();
           glyph.animate([
-            { transform:'translateY(0)' },
-            { transform:'translateY(-0.24em)', offset:0.35 },
-            { transform:'translateY(0)' }
+            { top:'0em' },
+            { top:'-0.24em', offset:0.35 },
+            { top:'0em' }
           ], {duration:300, easing:'ease-in-out'});
         });
         group.append(key);

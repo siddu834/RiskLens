@@ -1,8 +1,8 @@
 # RiskLens - Serious Delinquency Prediction & Evaluation
 
-A machine learning modeling and evaluation project that predicts the probability of a customer experiencing serious financial delinquency within two years.
+We study the probability that a borrower experiences serious delinquency within two years using the Give Me Some Credit dataset.
 
-RiskLens compares logistic regression, random forest and XGBoost using development cross-validation, then evaluates a frozen calibrated model on a separate holdout. Its interactive website runs the frozen calibrated model on hypothetical inputs, compares scenarios, and explains the tradeoff between missed positives and false alarms. This is a reproducible historical-data study, not a validated lending system.
+We compare logistic regression, random forest and XGBoost using development cross-validation, then evaluate a frozen calibrated model on a separate holdout. On the website, visitors can test hypothetical profiles, compare scenarios and explore the tradeoff between missed cases and false alarms. Our conclusions concern this historical dataset.
 
 ---
 
@@ -134,7 +134,7 @@ python scripts/audit_data.py
 
 Executed notebooks and timings are saved under `.runs/` (excluded from Git). To check only the fixed final evaluation after preparing the split, use `python scripts/reproduce.py --notebooks 00 02 07`. Full execution overwrites generated metrics and figures; retain previous results before comparing runs.
 
-**Verification scope (16 November 2026):** A clean public GitHub clone and a newly installed Python 3.13 environment successfully rebuilt the frozen final ensemble using `scripts/export_browser_model.py`. ROC-AUC, average precision and Brier score matched the saved reference exactly. The dependency check and seven regression tests passed. All nine notebooks previously completed in the validated environment; the fresh-environment runner subsequently completed notebooks 00, 02 and 07 after local networking became available. The original startup stall is resolved. A second full hyperparameter-search run in the fresh environment is not claimed. The standalone exporter also independently verifies the final model. See [the reproduction report](docs/reproduction_report.md).
+**Verification scope (17 November 2026):** We cloned the public repository into a clean directory, installed the documented dependencies in a fresh Python 3.13 environment and ran all nine notebooks from the original data files. All notebook cells completed without error. The final metrics, threshold data, calibration summaries and follow-up analyses matched the published results. Seven regression tests and the 200-profile browser parity check passed. The execution record and environment are linked in [the reproduction report](docs/reproduction_report.md).
 
 To reproduce the prediction lab and aggregate error audit directly, without launching a notebook kernel:
 
@@ -235,9 +235,9 @@ RiskLens/
 - Explore additional machine learning models.
 - Validate on later time periods and borrower-disjoint data when identifiers become available.
 
-## Maintenance and Ownership
+## AI-use disclosure and responsibility
 
-We used OpenAI Codex for coding, experiment execution, debugging, visualization, and editing. We are responsible for the submitted work and its conclusions.
+We used OpenAI Codex for assistance with code development, experiment execution, debugging, visualization and editing. We reviewed the methods and results and take responsibility for the submitted conclusions.
 
 ## Team contributions
 

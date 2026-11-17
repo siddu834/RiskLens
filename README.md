@@ -260,3 +260,7 @@ GitHub profiles: [G Surya Siddardha Reddy (@siddu834)](https://github.com/siddu8
 
 Data: [Give Me Some Credit](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Library references: [scikit-learn](https://scikit-learn.org/stable/), [XGBoost](https://xgboost.readthedocs.io/), [imbalanced-learn](https://imbalanced-learn.org/stable/), and [SHAP](https://shap.readthedocs.io/). The browser evaluator is a project implementation of exported tree traversal, original preprocessing and isotonic interpolation.
 
+
+### Calibrated logistic regression comparison
+
+After notebook 06, run `python scripts/compare_calibrated.py` from the repository root. The script fits isotonic-calibrated balanced logistic regression on the same development folds as the saved fixed XGBoost predictions. Per-fold and pooled metrics are in [the paired comparison](results/calibrated_comparison.csv).

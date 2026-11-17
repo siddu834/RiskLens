@@ -96,3 +96,41 @@ dial.addEventListener('input', () => {
 utilization.addEventListener('input', syncDial);
 document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', syncDial));
 syncDial();
+
+// Each stationary hit area plays its own note while the glyph moves inside it.
+const hoverMotion = matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)');
+const pianoControls = '.brand, .topbar nav a, .workspace-nav a, .actions a, .preset-row button, .segmented button, .download-row a';
+for (const control of document.querySelectorAll(pianoControls)) {
+  const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    if (!node.textContent.trim()) continue;
+    const fragment = document.createDocumentFragment();
+    for (const word of node.textContent.split(/(\s+)/u)) {
+      if (!word.trim()) { fragment.append(word); continue; }
+      const group = document.createElement('i');
+      group.style.cssText = 'display:inline-block;font-style:inherit';
+      for (const char of word) {
+        const key = document.createElement('i');
+        key.style.cssText = 'display:inline-block;font-style:inherit';
+        const glyph = key.cloneNode();
+        glyph.style.pointerEvents = 'none';
+        glyph.textContent = char;
+        key.append(glyph);
+        key.addEventListener('pointerenter', event => {
+          if (!hoverMotion.matches || event.pointerType === 'touch') return;
+          for (const animation of glyph.getAnimations()) animation.cancel();
+          glyph.animate([
+            { transform:'translateY(0)' },
+            { transform:'translateY(-0.24em)', offset:0.35 },
+            { transform:'translateY(0)' }
+          ], {duration:300, easing:'ease-in-out'});
+        });
+        group.append(key);
+      }
+      fragment.append(group);
+    }
+    node.replaceWith(fragment);
+  }
+}

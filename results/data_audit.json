@@ -10,6 +10,26 @@
   "test_rows_matching_development_including_label": 163,
   "test_rows_matching_development_features": 173,
   "interpretation": "Identical feature profiles are not proof of borrower identity. The original random split is retained for reproduction; the additional subset analysis is not a replacement untouched test set.",
+  "history_at_threshold_023": [
+    {
+      "group": "All three counts zero",
+      "records": 23945,
+      "positives": 641,
+      "missed": 626
+    },
+    {
+      "group": "At least one valid late count",
+      "records": 6000,
+      "positives": 1334,
+      "missed": 385
+    },
+    {
+      "group": "History indeterminate",
+      "records": 55,
+      "positives": 30,
+      "missed": 0
+    }
+  ],
   "nonmatching_test_subset": {
     "rows": 29827,
     "roc_auc": 0.8690184406242876,

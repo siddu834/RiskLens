@@ -43,6 +43,23 @@ def audit():
         predicted = pd.read_csv(predictions)
         assert len(predicted) == len(test)
         assert (predicted.actual.to_numpy() == test[TARGET_COL].to_numpy()).all()
+        late_columns = [column for column in features if 'DaysPastDue' in column or column == 'NumberOfTimes90DaysLate']
+        history = saved_test[late_columns].replace([96, 98], float('nan'))
+        positive_history = history.gt(0).any(axis=1)
+        zero_history = history.eq(0).all(axis=1)
+        groups = {
+            'All three counts zero': zero_history,
+            'At least one valid late count': positive_history,
+            'History indeterminate': ~(positive_history | zero_history),
+        }
+        report['history_at_threshold_023'] = []
+        for label, mask in groups.items():
+            positives = mask & predicted.actual.eq(1)
+            missed = int((positives & predicted.probability.lt(0.23)).sum())
+            report['history_at_threshold_023'].append({
+                'group': label, 'records': int(mask.sum()),
+                'positives': int(positives.sum()), 'missed': missed,
+            })
         subset = predicted.loc[~overlap]
         report['nonmatching_test_subset'] = {
             'rows': len(subset),

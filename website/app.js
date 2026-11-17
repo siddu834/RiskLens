@@ -43,7 +43,14 @@ function estimate() {
  $('predictionFlag').textContent = probability >= .23 ? 'Flagged for this demonstration' : 'Below the flag threshold';
  $('saveScenario').disabled=false;
  const notes=[];
- if (input.MonthlyIncome===null || input.NumberOfDependents===null) notes.push('Missing values use each training fold’s stored median, with missingness indicators.');
+ for (const key of ['MonthlyIncome', 'NumberOfDependents']) {
+   if (input[key] !== null) continue;
+   const index = model.features.indexOf(key);
+   const medians = model.members.map(member => member.medians[index]);
+   const label = fields.find(field => field[0] === key)[1];
+   notes.push(label + ' was blank. Its missingness indicator is 1. The five stored fold medians used here are ' + medians.map(num).join(', ') + '.');
+ }
+
  if (fields.filter(f=>f[0].includes('Days')).some(f=>[96,98].includes(input[f[0]]))) notes.push('Late-payment codes 96/98 are treated as missing, with a combined sentinel flag.');
  for(const key of ['RevolvingUtilizationOfUnsecuredLines','DebtRatio']) if(model.members.some(m=>input[key]>m.caps[key])) notes.push(`${fields.find(f=>f[0]===key)[1]} is capped at stored training-fold limits.`);
  notes.push('Changing one field while holding others fixed may create an unrealistic profile; the difference is not a causal effect.');
@@ -90,7 +97,12 @@ function updateMetrics() {
  $('flagRate').textContent=pct(result.flag_rate,2);
  for(const key of ['tp','fp','fn','tn'])$(key).textContent=num(result[key]);
  const total=result.tp+result.fp+result.fn+result.tn;
- $('tradeoff').textContent=`Catch ${num(result.tp)} positive cases, miss ${num(result.fn)}, and raise ${num(result.fp)} false alarms at ${result.threshold.toFixed(2)}.`;
+ const caughtPerHundred = Math.round(result.recall * 100);
+ const flagExplanation = result.tp + result.fp
+   ? 'Of every 100 flagged, about ' + Math.round(result.precision * 100) + ' experienced serious delinquency.'
+   : 'No records were flagged, so precision is undefined.';
+ $('tradeoff').textContent = 'On development predictions, about ' + caughtPerHundred + ' of every 100 actual cases were caught. ' + flagExplanation;
+
  if($('costRatio').validity.valid && $('costRatio').value!=='') {
    const ratio=Number($('costRatio').value), cost=r=>ratio*r.fn+r.fp;
    const optimum=thresholds.reduce((a,b)=>cost(b)<cost(a)?b:a);

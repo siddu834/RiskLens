@@ -72,7 +72,18 @@ $('profileForm').addEventListener('submit', event => {
    });
  }
 });
-$('profileForm').addEventListener('input',()=>{lastPrediction=null;$('saveScenario').disabled=true;$('predictionValue').innerHTML='—<span>%</span>';$('predictionFlag').textContent='Estimate again';$('probabilityFill').style.width='0%';$('predictionDescription').textContent='Inputs changed. Select “Estimate probability” to update the result.';document.querySelectorAll('[data-preset]').forEach(b=>b.classList.remove('active'));});
+$('profileForm').addEventListener('input', () => {
+ lastPrediction = null;
+ $('saveScenario').disabled = true;
+ $('predictionValue').innerHTML = '&mdash;<span>%</span>';
+ $('predictionFlag').textContent = 'Estimate again';
+ $('probabilityFill').style.width = '0%';
+ $('predictionDescription').textContent = 'Inputs changed. Select Estimate probability to update the result.';
+ $('inputNotes').textContent = '';
+ if (model) $('modelStatus').textContent = 'Inputs changed. Ready for a new estimate.';
+ if (savedScenario) $('comparison').textContent = 'Saved ' + pct(savedScenario.probability) + '. Estimate the edited profile to compare.';
+ document.querySelectorAll('[data-preset]').forEach(button => button.classList.remove('active'));
+});
 document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>fillPreset(b.dataset.preset)));
 $('saveScenario').addEventListener('click',()=>{if(!lastPrediction)return;savedScenario=structuredClone(lastPrediction);$('comparison').textContent=`Saved ${pct(savedScenario.probability)}. Change an input and estimate again to compare.`;});
 fillPreset('steady');

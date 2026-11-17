@@ -97,3 +97,8 @@ footer .signature .name-tip { top:auto; bottom:100%; }
 
 .preset-row .chip:hover, .preset-row .chip:focus-visible { background:#e5f0da; color:var(--ink); border-color:#687a58; }
 .preset-row .chip.active { background:#c9f789; color:var(--ink); border-color:#44662c; }
+
+/* The shared footer sits on the dark workspace background in every room. */
+footer .brand { color:#e8edf6; }
+footer p { color:#c4d0dc; }
+footer a:not(.brand) { color:#c9f789; }

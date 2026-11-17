@@ -54,8 +54,17 @@ function estimate() {
    $('comparison').textContent=`Saved: ${pct(savedScenario.probability)} → current: ${pct(probability)} (${delta>=0?'+':''}${delta.toFixed(1)} percentage points). ${changed.length?'Changed: '+changed.join(', ')+'.':'Same input profile.'}`;
  }
  $('modelStatus').textContent='Estimate complete. Inputs stay in this browser session.';
+ return true;
 }
-$('profileForm').addEventListener('submit',event=>{event.preventDefault();estimate();});
+$('profileForm').addEventListener('submit', event => {
+ event.preventDefault();
+ if (estimate()) {
+   $('predictionValue').scrollIntoView({
+     block: 'center',
+     behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
+   });
+ }
+});
 $('profileForm').addEventListener('input',()=>{lastPrediction=null;$('saveScenario').disabled=true;$('predictionValue').innerHTML='—<span>%</span>';$('predictionFlag').textContent='Estimate again';$('probabilityFill').style.width='0%';$('predictionDescription').textContent='Inputs changed. Select “Estimate probability” to update the result.';document.querySelectorAll('[data-preset]').forEach(b=>b.classList.remove('active'));});
 document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>fillPreset(b.dataset.preset)));
 $('saveScenario').addEventListener('click',()=>{if(!lastPrediction)return;savedScenario=structuredClone(lastPrediction);$('comparison').textContent=`Saved ${pct(savedScenario.probability)}. Change an input and estimate again to compare.`;});

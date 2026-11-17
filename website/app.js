@@ -113,8 +113,9 @@ function updateMetrics() {
 $('thresholdSlider').addEventListener('input',updateMetrics);$('costRatio').addEventListener('input',updateMetrics);
 document.querySelectorAll('[data-threshold]').forEach(b=>b.addEventListener('click',()=>{$('thresholdSlider').value=b.dataset.threshold;updateMetrics();}));
 getJSON('data/threshold_metrics.json').then(data=>{if(!Array.isArray(data)||!data.length)throw new Error('Empty threshold table');thresholds=data;$('thresholdSlider').disabled=false;$('status').textContent='Development OOF data loaded · 101 thresholds · original test reporting stays fixed.';updateMetrics();}).catch(error=>{$('status').textContent=error.message;});
+const addRow=(target,values)=>{const row=document.createElement('tr');for(const value of values){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}$(target).append(row);};
 getJSON('data/evidence.json').then(data=>{
- const addRow=(target,values)=>{const row=document.createElement('tr');for(const value of values){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}$(target).append(row);};
+
  data.features.forEach(f=>addRow('featureRows',[fields.find(x=>x[0]===f.feature)?.[1]||f.feature,num(f.missing),num(f.median),num(f.p01),num(f.p99)]));
  Object.entries(data.errors).forEach(([name,g])=>addRow('errorRows',[name,num(g.n),pct(g.median_probability),num(g.median_utilization),pct(g.prior_90day_late_rate)]));
  $('uncertainty').textContent=`95% conditional bootstrap interval for test AP: ${data.test_ap_interval.map(x=>x.toFixed(4)).join('–')} (${data.bootstrap_repetitions} resamples).`;
@@ -137,3 +138,21 @@ function drawChart(kind){
 }
 document.querySelectorAll('[data-chart]').forEach(b=>b.addEventListener('click',()=>drawChart(b.dataset.chart)));
 getJSON('data/chart_data.json').then(data=>{chartData=data;drawChart('pr');}).catch(error=>{$('evaluationChart').textContent=error.message;});
+
+getJSON('data/review_capacity.json').then(data => {
+  const control = $('reviewBudget');
+  function showBudget() {
+    const models = data.budgets[control.value];
+    $('budgetRows').replaceChildren();
+    for (const [name, row] of Object.entries(models)) {
+      addRow('budgetRows', [name, ...['reviewed', 'caught', 'missed', 'false_alarms'].map(key => num(row[key]))]);
+    }
+    const gain = models.XGBoost.caught - models['Logistic regression'].caught;
+    const comparison = gain === 0 ? 'Both models catch the same number of cases'
+      : (gain > 0 ? 'XGBoost' : 'Logistic regression') + ' catches ' + num(Math.abs(gain)) + ' more cases';
+    $('budgetFinding').textContent = comparison + ' with ' + num(models.XGBoost.reviewed) + ' reviews each.';
+  }
+  control.addEventListener('change', showBudget);
+  control.disabled = false;
+  showBudget();
+}).catch(() => { $('budgetFinding').textContent = 'Review counts could not load. Reload to try again.'; });

@@ -1,4 +1,5 @@
 """Compare against the saved development predictions from notebook 06."""
+import json
 import sys
 from pathlib import Path
 
@@ -41,6 +42,20 @@ def compare():
     record("pooled", np.arange(len(dev)))
     report = pd.DataFrame(rows)
     report.to_csv(ROOT / "results/calibrated_comparison.csv", index=False)
+    # Stable sorting breaks score ties by the saved development row order.
+    capacity = {"records": len(labels), "positives": int(labels.sum()), "budgets": {}}
+    for name, scores in [("Logistic regression", logistic), ("XGBoost", boosted)]:
+        ranked = np.argsort(-scores, kind="stable")
+        cumulative = labels.to_numpy()[ranked].cumsum()
+        for budget in [10, 25, 50, 100, 200]:
+            reviewed = len(labels) * budget // 1000
+            caught = int(cumulative[reviewed - 1])
+            capacity["budgets"].setdefault(budget, {})[name] = {
+                "reviewed": reviewed, "caught": caught,
+                "missed": capacity["positives"] - caught, "false_alarms": reviewed - caught,
+            }
+    (ROOT / "website/data/review_capacity.json").write_text(
+        json.dumps(capacity, indent=2) + "\n", encoding="utf-8")
     print(report.to_string(index=False))
 
 

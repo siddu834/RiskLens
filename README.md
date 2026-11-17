@@ -249,7 +249,7 @@ We used OpenAI Codex for coding, experiment execution, debugging, visualization,
 
 **G Surya Siddardha Reddy** and **Marimireddy Deekshith Reddy**
 
-GitHub: https://github.com/siddu834
+GitHub profiles: [G Surya Siddardha Reddy (@siddu834)](https://github.com/siddu834) and [Marimireddy Deekshith Reddy (@deekshith-reddy-m)](https://github.com/deekshith-reddy-m).
 
 ---
 

@@ -1,4 +1,5 @@
 """Build a self-contained static site and reject missing assets or invalid JSON."""
+import hashlib
 import json
 import shutil
 import re
@@ -67,6 +68,13 @@ def build():
                                  index.read_text(encoding='utf-8'), flags=re.DOTALL)
     if replacements != 1:
         raise ValueError('Expected exactly one final-test summary placeholder')
+    assets = Assets()
+    assets.feed(html)
+    for url in assets.paths:
+        filename = url.partition('?')[0]
+        if filename.endswith(('.css', '.js')):
+            digest = hashlib.sha256((destination / filename).read_bytes()).hexdigest()[:12]
+            html = html.replace(f'"{url}"', f'"{filename}?v={digest}"')
     index.write_text(html, encoding='utf-8')
     for path in (destination / 'data').rglob('*.json'):
         value = json.loads(path.read_text(encoding='utf-8'), parse_constant=reject_constant)

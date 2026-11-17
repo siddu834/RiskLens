@@ -69,6 +69,8 @@ function openRoom() {
   const nextRoom = Math.max(0, active);
   if (nextRoom === currentRoom) return;
   currentRoom = nextRoom;
+  // Span the active sections and footer so hidden sections leave no grid gaps.
+  navigation.style.setProperty('--visible-rows', rooms[nextRoom][2].length + 1);
   rooms.forEach(([, , selectors], index) => {
     const visible = index === nextRoom;
     links[index].setAttribute('aria-current', visible ? 'page' : 'false');

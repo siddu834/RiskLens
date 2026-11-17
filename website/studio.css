@@ -25,7 +25,7 @@ body { background:#101929; }
 .brand-mark { display:inline-grid; place-items:center; width:2.1em; height:2.1em; margin-right:.5em; border-radius:.48em; background:#c9f789; color:#142333; font:800 .7em/1 Manrope,system-ui,sans-serif; letter-spacing:-.08em; transform:rotate(-7deg); vertical-align:middle; box-shadow:3px 3px 0 #477278; }
 .view-credit { margin:2.5rem 0 0; padding-top:1.2rem; border-top:1px solid currentColor; font-size:.86rem; opacity:.78; text-align:right; }
 main { display:grid; grid-template-columns:13rem minmax(0,1fr); align-items:start; padding:1.4rem 2%; gap:1rem; }
-.workspace-nav { grid-column:1; grid-row:1 / span 16; position:sticky; top:1rem; flex-direction:column; }
+.workspace-nav { grid-column:1; grid-row:1 / span var(--visible-rows, 1); position:sticky; top:1rem; flex-direction:column; }
 main > section,main > footer { grid-column:2; min-width:0; }
 main > section[hidden] { display:none; }
 main > .section { background:#f4f6f9; border-radius:1rem; padding:clamp(1rem,3vw,3rem); margin:0; }

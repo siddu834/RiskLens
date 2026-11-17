@@ -1,4 +1,5 @@
 """Compare against the saved development predictions from notebook 06."""
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -40,6 +41,29 @@ def compare():
         logistic[valid] = model.predict_proba(dev.iloc[valid])[:, 1]
         record(number, valid)
     record("pooled", np.arange(len(dev)))
+    paired = pd.DataFrame({"actual": labels, "logistic": logistic, "xgboost": boosted})
+    paired.to_csv(ROOT / "results/calibrated_paired_predictions.csv", index=False)
+    rng = np.random.default_rng(RANDOM_SEED)
+    gains = []
+    y = labels.to_numpy()
+    for _ in range(300):
+        sample = rng.integers(0, len(y), len(y))
+        truth, lr, xgb = y[sample], logistic[sample], boosted[sample]
+        gains.append([
+            average_precision_score(truth, xgb) - average_precision_score(truth, lr),
+            brier_score_loss(truth, lr) - brier_score_loss(truth, xgb),
+        ])
+    intervals = np.quantile(gains, [0.025, 0.975], axis=0)
+    uncertainty = {
+        "resamples": 300, "seed": RANDOM_SEED,
+        "ap_gain_95_interval": intervals[:, 0].tolist(),
+        "brier_reduction_95_interval": intervals[:, 1].tolist(),
+        "scope": "Paired row bootstrap of fixed development OOF predictions. Conditional on these predictions. Excludes retraining, selection uncertainty, and population shift.",
+        "development_sha256": hashlib.sha256((ROOT / "data/dev.csv").read_bytes()).hexdigest(),
+        "xgboost_predictions_sha256": hashlib.sha256((ROOT / "results/dev_oof_predictions.csv").read_bytes()).hexdigest(),
+    }
+    (ROOT / "results/calibrated_uncertainty.json").write_text(
+        json.dumps(uncertainty, indent=2) + "\n", encoding="utf-8")
     report = pd.DataFrame(rows)
     report.to_csv(ROOT / "results/calibrated_comparison.csv", index=False)
     # Stable sorting breaks score ties by the saved development row order.

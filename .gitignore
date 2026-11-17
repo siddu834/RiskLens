@@ -29,3 +29,5 @@ venv/
 site/
 .pytest_cache/
 .runs/
+
+results/calibrated_paired_predictions.csv

@@ -230,7 +230,7 @@ RiskLens/
 
 ## Future Improvements
 
-- Evaluate calibrated logistic regression using the same development protocol.
+- Extend the completed calibrated-model comparison to independently collected data.
 - Conduct a detailed fairness evaluation.
 - Explore additional machine learning models.
 - Validate on later time periods and borrower-disjoint data when identifiers become available.
@@ -243,7 +243,7 @@ We used OpenAI Codex for coding, experiment execution, debugging, visualization,
 
 - **G Surya Siddardha Reddy:** Led data access and auditing, preprocessing, baseline and model comparisons, and probability calibration.
 - **Marimireddy Deekshith Reddy:** Led evaluation design, threshold and error analysis, website interactions, reproducibility checks, and deployment.
-- **Both:** Defined the research question, interpreted the results, reviewed the limitations, and prepared to explain the work in the viva.
+- **Both:** Defined the research question, interpreted the results, reviewed the limitations, and documented the experimental reasoning for assessment through the website and repository.
 
 ## Authors
 
@@ -264,3 +264,5 @@ Data: [Give Me Some Credit](https://www.kaggle.com/competitions/GiveMeSomeCredit
 ### Calibrated logistic regression comparison
 
 After notebook 06, run `python scripts/compare_calibrated.py` from the repository root. The script fits isotonic-calibrated balanced logistic regression on the same development folds as the saved fixed XGBoost predictions. Per-fold and pooled metrics are in [the paired comparison](results/calibrated_comparison.csv).
+
+The comparison script also exports paired development predictions and a 300-resample paired bootstrap in `results/calibrated_uncertainty.json`. These intervals condition on fixed development predictions and exclude retraining and model-selection uncertainty. The same command regenerates the review-budget interaction data.

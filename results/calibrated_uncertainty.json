@@ -1,0 +1,15 @@
+{
+  "resamples": 300,
+  "seed": 42,
+  "ap_gain_95_interval": [
+    0.013947201146566734,
+    0.024153455860929277
+  ],
+  "brier_reduction_95_interval": [
+    0.0006425223141321949,
+    0.0009788025410351023
+  ],
+  "scope": "Paired row bootstrap of fixed development OOF predictions. Conditional on these predictions. Excludes retraining, selection uncertainty, and population shift.",
+  "development_sha256": "5c487c6f1011b6ea8aa7370d51d765bb6730ab4db0dd2932cda76b2ee99c6ef3",
+  "xgboost_predictions_sha256": "54da57eea06a44cb77c0c07d9e33caef5cff6a39be97f98123cd2939489492ed"
+}

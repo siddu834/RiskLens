@@ -61,40 +61,24 @@ const navigationResize = new ResizeObserver(updateNavigationOffsets);
 navigationResize.observe(topbar);
 navigationResize.observe(navigation);
 updateNavigationOffsets();
+let currentRoom = -1;
 function openRoom() {
   const target = document.getElementById(location.hash.slice(1));
   const active = rooms.findIndex(([, , selectors]) =>
     selectors.some(selector => target && document.querySelector(selector).contains(target)));
+  const nextRoom = Math.max(0, active);
+  if (nextRoom === currentRoom) return;
+  currentRoom = nextRoom;
   rooms.forEach(([, , selectors], index) => {
-    const visible = index === Math.max(0, active);
+    const visible = index === nextRoom;
     links[index].setAttribute('aria-current', visible ? 'page' : 'false');
     for (const selector of selectors) document.querySelector(selector).hidden = !visible;
   });
-  if (target && target !== document.querySelector('main')) target.scrollIntoView();
-  else window.scrollTo(0, 0);
+  if (target && target !== document.querySelector('main')) target.scrollIntoView({behavior:'instant', block:'start'});
+  else window.scrollTo({top:0, behavior:'instant'});
 }
 window.addEventListener('hashchange', openRoom);
 openRoom();
-
-let previousScroll = window.scrollY;
-let scrollDirection = 1;
-window.addEventListener('scroll', () => {
-  const currentScroll = window.scrollY;
-  if (Math.abs(currentScroll - previousScroll) > 2) {
-    scrollDirection = currentScroll > previousScroll ? 1 : -1;
-  }
-  previousScroll = currentScroll;
-}, {passive:true});
-const sectionObserver = new IntersectionObserver(entries => {
-  for (const entry of entries) {
-    if (!entry.isIntersecting) continue;
-    entry.target.style.setProperty('--scroll-direction', scrollDirection);
-    entry.target.classList.remove('scroll-arrived');
-    void entry.target.offsetWidth;
-    entry.target.classList.add('scroll-arrived');
-  }
-}, {threshold:.18});
-document.querySelectorAll('main > section').forEach(section => sectionObserver.observe(section));
 
 const utilization = document.getElementById('RevolvingUtilizationOfUnsecuredLines');
 const scrubber = document.createElement('div');
